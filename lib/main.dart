@@ -2,11 +2,17 @@ import 'package:diploma/favourites.dart';
 import 'package:diploma/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'hive.dart';
 import 'alarm_clock.dart';
 import 'home.dart';
 import 'messenger.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  Hive.registerAdapter(UserAdapter());
   runApp(const MyApp());
 }
 
@@ -90,13 +96,11 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xffE1EFC2),
-      body: PageStorage(
+        body: PageStorage(
         bucket: bucket,
         child: Center(
           child: screens[_bottomNavIndex],
         ),
-
       ),
       floatingActionButton: Visibility(
         child: FloatingActionButton(
@@ -116,8 +120,6 @@ class _MyHomePageState extends State<MyHomePage> {
         inactiveColor: const Color(0xff83C17F),
         activeColor: const Color(0xff246E46),
         activeIndex: _bottomNavIndex,
-        leftCornerRadius: 32,
-        rightCornerRadius: 32,
         onTap: (index) => setState(() => _bottomNavIndex = index),
         gapLocation: GapLocation.center,
         //other params

@@ -40,7 +40,7 @@ class PR extends StatelessWidget {
                     obscureText: true,
                     maxLines: 1,
                     validator: (val) =>
-                        val!.length < 6 ? 'Password too short.' : null,
+                        val!.length < 6 ? 'Password too short, min 6 symbols' : null,
                     onSaved: (val) => _password = val!,
                     style: _sizeTextBlack,
                   ),

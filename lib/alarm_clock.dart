@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
-
+import 'dart:convert';
+import 'bebra.dart';
 import 'loadscreen.dart';
 
 class Alarm_clock extends CommonPickerModel {
@@ -62,19 +64,34 @@ class Alarm_clock extends CommonPickerModel {
   DateTime finalTime() {
     return currentTime.isUtc
         ? DateTime.utc(
-        currentTime.year,
-        currentTime.month,
-        currentTime.day,
-        this.currentLeftIndex(),
-        this.currentMiddleIndex(),
-        this.currentRightIndex())
+            currentTime.year,
+            currentTime.month,
+            currentTime.day,
+            this.currentLeftIndex(),
+            this.currentMiddleIndex(),
+            this.currentRightIndex())
         : DateTime(
-        currentTime.year,
-        currentTime.month,
-        currentTime.day,
-        this.currentLeftIndex(),
-        this.currentMiddleIndex(),
-        this.currentRightIndex());
+            currentTime.year,
+            currentTime.month,
+            currentTime.day,
+            this.currentLeftIndex(),
+            this.currentMiddleIndex(),
+            this.currentRightIndex());
+  }
+}
+
+Future<bigbebra> getData() async {
+  var responce = await http.get(Uri.parse('https://zenquotes.io/api/random'));
+  print(responce.body);
+  print(responce.statusCode);
+  if (responce.statusCode == 200) {
+    var Json = jsonDecode(responce.body);
+    print('+');
+    var res = bigbebra.fromJSON(Json[0]);
+    print('=');
+    return res;
+  } else {
+    throw "бебра не получена";
   }
 }
 
@@ -91,11 +108,16 @@ class Alarm extends StatelessWidget {
   }
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
+    late String daytext;
     return Scaffold(
-      backgroundColor: const Color(0xffE1EFC2),
       appBar: AppBar(
         backgroundColor: const Color(0xff83C17F),
         title: const Text(
@@ -105,36 +127,46 @@ class HomePage extends StatelessWidget {
         centerTitle: true,
       ),
       body: FutureBuilder(
-        future: Future.delayed(Duration(seconds: 3), () => 0),
-        builder:(context, snapshot) {
+        future: getData(),
+        builder: (context, snapshot) {
           if (snapshot.hasData) {
+            bigbebra? bebra = snapshot.data as bigbebra?;
+            daytext = bebra!.q;
             return Center(
-          child: Column(
-            children: <Widget>[
-              TextButton(
-                  onPressed: () {
-                    DatePicker.showDateTimePicker(context, showTitleActions: true,
-                        onChanged: (date) {
+              child: Column(
+                children: <Widget>[
+                  TextButton(
+                      onPressed: () {
+                        DatePicker.showDateTimePicker(context,
+                            showTitleActions: true, onChanged: (date) {
                           print('change $date in time zone ' +
                               date.timeZoneOffset.inHours.toString());
                         }, onConfirm: (date) {
                           print('confirm $date');
-                        },
-                        currentTime: DateTime.now(),
-                        locale: LocaleType.ru);
-                  },
-                  child: const Padding(
-                    padding: EdgeInsets.only(top: 300),
-                    child: Text(
-                      'Установить время',
-                      style: TextStyle(color: Color(0xff246E46), fontSize: 30),
+                        }, currentTime: DateTime.now(), locale: LocaleType.ru);
+                      },
+                      child: const Padding(
+                        padding: EdgeInsets.only(top: 300),
+                        child: Text(
+                          'Установить время',
+                          style:
+                              TextStyle(color: Color(0xff246E46), fontSize: 30),
+                        ),
+                      )),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 12, right: 12),
+                    child: Center(
+                      child: Text(
+                        daytext,
+                        style: TextStyle(color: Color(0xff246E46), fontSize: 30),
+                      ),
                     ),
-                  )),
-            ],
-          ),
-        );
+                  ),
+                ],
+              ),
+            );
           }
-          return const LoadScreen();
+          return LoadScreen();
         },
       ),
     );

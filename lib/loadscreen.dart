@@ -29,7 +29,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget>
   void initState() {
     controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 3),
+      duration: const Duration(milliseconds: 700),
     )..addListener(() {
       setState(() {});
     });
@@ -46,7 +46,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xffE1EFC2),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Center(

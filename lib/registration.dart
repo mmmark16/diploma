@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hive/hive.dart';
+import 'hive.dart';
 
 class REG extends StatelessWidget {
-  String _email = "";
-  String _password = "";
-  String _passwordcheck = "";
+  final GlobalKey<FormState> _form = GlobalKey<FormState>();
+  TextEditingController _email = TextEditingController();
+  TextEditingController _pass = TextEditingController();
+  TextEditingController _confirmPass = TextEditingController();
   final _sizeTextBlack = const TextStyle(fontSize: 20.0, color: Colors.black);
   final _sizeTextWhite = const TextStyle(fontSize: 20.0, color: Colors.white);
   final formKey = GlobalKey<FormState>();
   late BuildContext _context;
+  // late Box<User> box;
+
+  Future<Box<User>> openBox() async {
+    return await Hive.openBox<User>('testBox');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,9 +24,10 @@ class REG extends StatelessWidget {
     return Scaffold(
       backgroundColor: Color(0xffE1EFC2),
       appBar: AppBar(
-        title: Text("РЕГИСТРАЦИЯ", style: TextStyle(
-            color: Color(0xff246E46)
-        ),),
+        title: Text(
+          "РЕГИСТРАЦИЯ",
+          style: TextStyle(color: Color(0xff246E46)),
+        ),
         centerTitle: true,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Color(0xff246E46)),
@@ -27,56 +36,46 @@ class REG extends StatelessWidget {
           },
         ),
       ),
-      body: Center(
-        child: Form(
-            key: formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  child: TextFormField(
-                    decoration: InputDecoration(labelText: "Email",hoverColor: Color(0xff246E46) ,fillColor: Color(0xff246E46)),
+      body: FutureBuilder<Box<User>>(
+        future: openBox(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Center(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 24, top: 48, right: 24),
+              child: Form(
+          key: _form,
+          child: Column(
+              children: [
+                TextFormField(
+                    decoration: new InputDecoration(labelText: "Email"),
                     keyboardType: TextInputType.emailAddress,
-                    maxLines: 1,
                     style: _sizeTextBlack,
-                    onSaved: (val) => _email = val!,
-                    validator: (val) =>
-                        !val!.contains("@") ? 'Not a valid email.' : null,
-                  ),
-                  width: 350.0,
-                ),
-                Container(
-                  child: TextFormField(
-                    decoration: InputDecoration(labelText: "Пароль"),
-                    obscureText: true,
-                    maxLines: 1,
-                    controller: _password,
-                    validator: (val){
-                      if(val.isEmpty)
-                        return 'Empty';
+                    controller: _email,
+                    validator: (val) {
+                      if (val!.isEmpty) return 'Пожалуйста введите свой E-mail';
+                      if (!val.contains('@')) return 'Это не E-mail';
                       return null;
-                    }
-                    style: _sizeTextBlack,
-                  ),
-                  width: 350.0,
-                  padding: EdgeInsets.only(top: 10.0),
-                ),
-                Container(
-                  child: TextFormField(
-                    decoration: InputDecoration(labelText: "Проверка пароля"),
+                    }),
+                TextFormField(
+                    decoration: new InputDecoration(labelText: "Пароль"),
                     obscureText: true,
-                    maxLines: 1,
-                    validator: (valid) {
-                      print(valid);
-                      print(_password);
-                      return valid!.compareTo(_password) == 0 ? 'Несовпадение паролей' : null;
-                    },
-                    // onSaved: (val) => _password = val!,
                     style: _sizeTextBlack,
-                  ),
-                  width: 350.0,
-                  padding: const EdgeInsets.only(top: 10.0),
-                ),
+                    controller: _pass,
+                    validator: (val) {
+                      if (val!.isEmpty) return 'Введите пароль';
+                      return null;
+                    }),
+                TextFormField(
+                    decoration: new InputDecoration(labelText: "Проверка пароля"),
+                    obscureText: true,
+                    style: _sizeTextBlack,
+                    controller: _confirmPass,
+                    validator: (val) {
+                      if (val!.isEmpty) return 'Введите пароль';
+                      if (val != _pass.text) return 'Пароли не совпадают';
+                      return null;
+                    }),
                 Padding(
                   padding: const EdgeInsets.only(top: 25.0),
                   child: Container(
@@ -89,7 +88,13 @@ class REG extends StatelessWidget {
                     child: MaterialButton(
                       height: 50.0,
                       minWidth: 300.0,
-                      onPressed: submit,
+                      onPressed: (){
+
+                        var person = User(_email.value.text, _confirmPass.value.text);
+                        snapshot.data!.add(person);
+                        print(snapshot.data!.getAt(0));
+                        snapshot.data!.close();
+                        },
                       child: Text(
                         "ЗАРЕГЕСТРИРОВАТЬТСЯ",
                         style: _sizeTextWhite,
@@ -98,15 +103,20 @@ class REG extends StatelessWidget {
                   ),
                 )
               ],
-            )),
+          ),
+        ),
+            ));
+          }
+          return Center(child: CircularProgressIndicator(),);
+        },
       ),
     );
   }
 
   void submit() {
-    final form = formKey.currentState;
-    if (form!.validate()) {
-      form.save();
+    final _form = formKey.currentState;
+    if (true) {
+      _form!.save();
       performLogin();
     }
   }
@@ -116,7 +126,7 @@ class REG extends StatelessWidget {
     Navigator.push(
         _context,
         MaterialPageRoute(
-            builder: (context) => SecondScreen(_email, _password)));
+            builder: (context) => SecondScreen(_email.value.toString(), _confirmPass.value.toString())));
   }
 
   void hideKeyboard() {
@@ -126,12 +136,12 @@ class REG extends StatelessWidget {
 
 class SecondScreen extends StatelessWidget {
   String _email = "";
-  String _password = "";
+  String _confirmPass = "";
   final _sizeTextBlack = const TextStyle(fontSize: 20.0, color: Colors.black);
 
   SecondScreen(String email, String password) {
     _email = email;
-    _password = password;
+    _confirmPass = password;
   }
 
   @override
@@ -142,7 +152,7 @@ class SecondScreen extends StatelessWidget {
         ),
         body: Center(
           child: Text(
-            "Email: $_email, password: $_password",
+            "Email: $_email, password: $_confirmPass",
             style: _sizeTextBlack,
           ),
         ));
