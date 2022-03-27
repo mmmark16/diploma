@@ -16,21 +16,7 @@ class Home extends StatelessWidget {
           centerTitle: true,
         ),
         body: ListView(
-
           children: [
-            /*Card(
-              child: InkWell(
-                splashColor: Colors.blue.withAlpha(30),
-                onTap: () {
-                  debugPrint('Card tapped.');
-                },
-                child: const SizedBox(
-                  width: 300,
-                  height: 50,
-                  child: Text('A card that can be tapped'),
-                ),
-              ),
-            ),*/
             Padding(
               padding: const EdgeInsets.all(8),
               child: Card(
@@ -192,6 +178,13 @@ class Home extends StatelessWidget {
                   ],
                 ),
               ),
+            ),
+            Divider(
+              height: 20,
+              thickness: 10,
+              indent: 32,
+              endIndent: 12,
+              color: Color.fromRGBO(235, 235, 235, 1),
             ),
             Padding(
               padding: const EdgeInsets.all(8),
