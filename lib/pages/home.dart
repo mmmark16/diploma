@@ -59,6 +59,7 @@ class _Home extends State<Home> {
               pubDate: advertisements![index].pubDate,
               author: advertisements![index].author,
               square: advertisements![index].filters.square,
+              fridge: advertisements![index].filters.fridge,
             );
           },
         ),

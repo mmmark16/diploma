@@ -12,6 +12,7 @@ class Ads extends StatelessWidget {
   final DateTime pubDate;
   final int author;
   final double square;
+  final bool fridge;
 
   const Ads(
       {required this.image,
@@ -22,7 +23,7 @@ class Ads extends StatelessWidget {
       required this.contacts,
       required this.pubDate,
       required this.author,
-      required this.square});
+      required this.square, required this.fridge});
 
   @override
   Widget build(BuildContext context) {
@@ -113,6 +114,7 @@ class Ads extends StatelessWidget {
                               author: author,
                               pubDate: pubDate,
                               address: address, square: square,
+                          fridge: fridge,
                             )),
                   );
                 },

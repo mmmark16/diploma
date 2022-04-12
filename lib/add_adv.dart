@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 
+import 'package:diploma/services/remote_services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -10,6 +11,8 @@ class Add_adv extends StatelessWidget {
   TextEditingController _controlleraddress = TextEditingController();
   TextEditingController _controllerdescription = TextEditingController();
   TextEditingController _controllercontact = TextEditingController();
+  TextEditingController _controllerauthor = TextEditingController();
+
 
   @override
   Widget build(BuildContext context) {
@@ -122,15 +125,40 @@ class Add_adv extends StatelessWidget {
                     filled: true)),
           ),
           Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              'Автор',
+              style: TextStyle(color: Color(0xff246E46), fontSize: 20),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0, left: 16),
+            child: TextField(
+                cursorColor: Colors.black,
+                controller: _controllerauthor,
+                decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: "Введите автора 1",
+                    fillColor: Color(0xff83C17F),
+                    filled: true)),
+          ),
+          Padding(
             padding: const EdgeInsets.only(top: 24, left: 16, right: 16),
-            child: Container(
-              decoration: BoxDecoration(color: Color(0xff83C17F), borderRadius: BorderRadius.all(Radius.circular(10)), boxShadow: [
-                BoxShadow(
-                  color: Colors.green,
-                  blurRadius: 7,
-                  offset: Offset(2, 5), // changes position of shadow
-                ),
-              ],),
+            child: GestureDetector(
+              child: Container(
+                height: 42,
+                child: Center(child: Text('Сохранить', style: TextStyle(color: Color(0xff246E46), fontSize: 24),)),
+                decoration: BoxDecoration(color: Color(0xff83C17F), borderRadius: BorderRadius.all(Radius.circular(10)), boxShadow: [
+                  BoxShadow(
+                    color: Colors.green,
+                    blurRadius: 7,
+                    offset: Offset(2, 5),
+                  ),
+                ],),
+              ),
+              onTap: () {
+                  RemoteService().createAdvertisement(_controllertitle.text, _controlleraddress.text, _controllercost.text, _controllercontact.text, _controllerauthor.text);
+              },
             ),
           )
         ],

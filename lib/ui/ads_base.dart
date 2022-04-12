@@ -11,19 +11,18 @@ class AdsBase extends StatelessWidget {
   final DateTime pubDate;
   final int author;
   final double square;
+  final bool fridge;
 
-
-  const AdsBase(
-      {required this.image,
-        required this.title,
-        required this.cost,
-        required this.description,
-        required this.address,
-        required this.contacts,
-        required this.pubDate,
-        required this.author,
-        required this.square
-      });
+  const AdsBase({required this.image,
+    required this.title,
+    required this.cost,
+    required this.description,
+    required this.address,
+    required this.contacts,
+    required this.pubDate,
+    required this.author,
+    required this.square,
+    required this.fridge});
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +47,7 @@ class AdsBase extends StatelessWidget {
             child: LikeButton(
               size: 24,
               circleColor:
-                  CircleColor(start: Color(0xff83C17F), end: Color(0xff246E46)),
+              CircleColor(start: Color(0xff83C17F), end: Color(0xff246E46)),
               bubblesColor: BubblesColor(
                 dotPrimaryColor: Color(0xff246E46),
                 dotSecondaryColor: Color(0xff246E46),
@@ -65,44 +64,44 @@ class AdsBase extends StatelessWidget {
         ],
       ),
       body: ListView(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(12)),
-              child: Image.asset(image),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 16.0, right: 16),
-            child: Text(
-              cost,
-              style: TextStyle(fontSize: 28, color: Color(0xff246E46)),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 16.0, top: 26),
-            child: Text(
-              description,
-              style: TextStyle(fontSize: 24, color: Color(0xff246E46)),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 16.0, top: 26),
-            child: Text(
-              description,
-              style: TextStyle(fontSize: 24, color: Color(0xff246E46)),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 16.0, top: 26),
-            child: Text(
-              square.toString(),
-              style: TextStyle(fontSize: 24, color: Color(0xff246E46)),
-            ),
-          ),
-        ],
+          children: [
+      Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: ClipRRect(
+        borderRadius: BorderRadius.all(Radius.circular(12)),
+        child: Image.asset(image),
       ),
+    ),
+    Padding(
+    padding: const EdgeInsets.only(left: 16.0, right: 16),
+    child: Text(
+    'Цена: ${cost}',
+    style: TextStyle(fontSize: 28, color: Color(0xff246E46)),
+    ),
+    ),
+    Padding(
+    padding: const EdgeInsets.only(left: 16.0, top: 26),
+    child: Text(
+    description,
+    style: TextStyle(fontSize: 24, color: Color(0xff246E46)),
+    ),
+    ),
+    Padding(
+    padding: const EdgeInsets.only(left: 16.0, top: 26),
+    child: Text(
+    square.toString(),
+    style: TextStyle(fontSize: 24, color: Color(0xff246E46)),
+    ),
+    ),
+    Padding(
+    padding: const EdgeInsets.only(left: 16.0, top: 26),
+    child: Text('Наличие холодильника ${fridge}',
+    style: TextStyle(fontSize: 24, color: Color(0xff246E46)),
+    ),
+    ),
+    ],
+    )
+    ,
     );
   }
 }
