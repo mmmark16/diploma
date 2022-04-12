@@ -22,7 +22,6 @@ class REG extends StatelessWidget {
   Widget build(BuildContext context) {
     _context = context;
     return Scaffold(
-      backgroundColor: Color(0xffE1EFC2),
       appBar: AppBar(
         title: Text(
           "РЕГИСТРАЦИЯ",
@@ -89,7 +88,6 @@ class REG extends StatelessWidget {
                       height: 50.0,
                       minWidth: 300.0,
                       onPressed: (){
-
                         var person = User(_email.value.text, _confirmPass.value.text);
                         snapshot.data!.add(person);
                         print(snapshot.data!.getAt(0));

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'dart:convert';
-import 'bebra.dart';
-import 'loadscreen.dart';
+import '../bebra.dart';
+import '../loadscreen.dart';
 
 class Alarm_clock extends CommonPickerModel {
   String digits(int value, int length) {

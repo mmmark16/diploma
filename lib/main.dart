@@ -1,13 +1,14 @@
-import 'package:diploma/favourites.dart';
-import 'package:diploma/profile.dart';
+
+import 'package:diploma/pages/favourites.dart';
+import 'package:diploma/login.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'hive.dart';
-import 'alarm_clock.dart';
-import 'home.dart';
-import 'messenger.dart';
+import 'pages/alarm_clock.dart';
+import 'pages/home.dart';
+import 'pages/messenger.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -127,3 +128,5 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
+

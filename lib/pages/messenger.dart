@@ -17,7 +17,7 @@ class _MS extends State<MS> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xffE1EFC2),
+
       appBar: AppBar(
           centerTitle: true,
           title:appBarTitle,

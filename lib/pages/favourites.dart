@@ -49,7 +49,6 @@ class _FVState extends State<FV> {
     var matrix = List.generate(10,
             (index) => List.generate(20, (index) => generateContainer(cvet[rn.nextInt(cvet.length)])));
     return Scaffold(
-      backgroundColor: Color(0xffE1EFC2),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Center(

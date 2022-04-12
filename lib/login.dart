@@ -1,3 +1,4 @@
+import 'package:diploma/add_adv.dart';
 import 'package:diploma/registration.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +16,6 @@ class PR extends StatelessWidget {
   Widget build(BuildContext context) {
     _context = context;
     return Scaffold(
-      backgroundColor: Color(0xffE1EFC2),
       body: Center(
         child: Form(
             key: formKey,
@@ -40,7 +40,7 @@ class PR extends StatelessWidget {
                     obscureText: true,
                     maxLines: 1,
                     validator: (val) =>
-                        val!.length < 6 ? 'Password too short, min 6 symbols' : null,
+                        val!.length < 6 ? 'Password too short, min 6 symbols  ' : null,
                     onSaved: (val) => _password = val!,
                     style: _sizeTextBlack,
                   ),
@@ -78,6 +78,24 @@ class PR extends StatelessWidget {
                       },
                       child: const Text(
                         "Еще не зарегестрировались?",
+                        style: TextStyle(
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 24),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context, MaterialPageRoute(builder: (_) => Add_adv()));
+                      },
+                      child: const Text(
+                        "Создать объявлеине",
                         style: TextStyle(
                           decoration: TextDecoration.underline,
                         ),
