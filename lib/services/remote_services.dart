@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:diploma/model/advertisement.dart';
 import 'package:http/http.dart' as http;
@@ -16,7 +17,7 @@ class RemoteService
     }
   }
 
-  Future<List<Image>?> Image() async{
+/*  Future<List<Image>?> Image() async{
     var client = http.Client();
 
     var uri = Uri.parse('https://estate-alarm.herokuapp.com/api/announcement/?format=json');
@@ -25,7 +26,7 @@ class RemoteService
       var json = jsonDecode(utf8.decode(responce.bodyBytes));
       return postFromJson(json);
     }
-  }
+  }*/
 
   /*Future<Advertisement> sendAdvertisement({
       required String title, required String address, required int cost, required String contacts, required int author}) async {
@@ -54,16 +55,20 @@ class RemoteService
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonEncode(<String, String>{
+
+      body: jsonEncode({
         'title': title,
         'address': address,
         'cost': cost,
+        'description': 'пост тест',
         'contacts': contacts,
         'author': author,
+        /*'filters': {1, 30, 12, 2, 12, 1, true, true, true, true, true, true},*/
+
       }),
     );
     print(response.statusCode);
-
+    log('${utf8.decode(response.bodyBytes)}', name: '${response.statusCode}');
     if (response.statusCode == 201) {
       return Advertisement.fromJson(jsonDecode(response.body));
     } else {
