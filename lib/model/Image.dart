@@ -1,11 +1,11 @@
 import 'dart:convert';
 
-List<Post> postFromJson(String str) => List<Post>.from(json.decode(str).map((x) => Post.fromJson(x)));
+List<Images> imagesFromJson(str) => str.map<Images>((x) => Images.fromJson(x)).toList();
 
-String postToJson(List<Post> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String imageToJson(List<Images> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-class Post {
-  Post({
+class Images {
+  Images({
     required this.id,
     required this.image,
     required this.announcement,
@@ -15,7 +15,7 @@ class Post {
   String image;
   int announcement;
 
-  factory Post.fromJson(Map<String, dynamic> json) => Post(
+  factory Images.fromJson(Map<String, dynamic> json) => Images(
     id: json["id"],
     image: json["image"],
     announcement: json["announcement"],

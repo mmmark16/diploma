@@ -2,69 +2,63 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:diploma/model/advertisement.dart';
+import 'package:diploma/model/advertisement.dart';
 import 'package:http/http.dart' as http;
+
+import '../model/Image.dart';
 
 class RemoteService
 {
   Future<List<Advertisement>?> getAdvertisement() async{
     var client = http.Client();
-
     var uri = Uri.parse('https://estate-alarm.herokuapp.com/api/announcement/?format=json');
     var responce = await client.get(uri);
     if (responce.statusCode == 200){
       var json = jsonDecode(utf8.decode(responce.bodyBytes));
-      return postFromJson(json);
+      return advertisementFromJson(json);
     }
   }
 
-/*  Future<List<Image>?> Image() async{
+ Future<List<Images>?> getImage() async{
     var client = http.Client();
 
-    var uri = Uri.parse('https://estate-alarm.herokuapp.com/api/announcement/?format=json');
+    var uri = Uri.parse('https://estate-alarm.herokuapp.com/api/image/?format=json');
     var responce = await client.get(uri);
     if (responce.statusCode == 200){
       var json = jsonDecode(utf8.decode(responce.bodyBytes));
-      return postFromJson(json);
+      return imagesFromJson(json);
     }
-  }*/
+  }
 
-  /*Future<Advertisement> sendAdvertisement({
-      required String title, required String address, required int cost, required String contacts, required int author}) async {
-    final http.Response response = await http.post(
-      Uri.parse('https://estate-alarm.herokuapp.com/api/announcement/?format=json') ,
-      headers: <String, String> {
-        'Content-Type' : 'application/json; charset=UTF-8' ,
-      },
-      body: jsonEncode(<String, String> {
-        'title' : title,
-        'address' : address,
-        'cost' : cost.toString(),
-        'contacts' : contacts,
-        'author' : author.toString(),
-      }),
-    );
-    if (response.statusCode == 201) {
-      return Advertisement.fromJson(json.decode(response.body));
-    } else {
-      throw Exception( 'Failed to load album' );
-    }
-  }*/
-  Future<Advertisement> createAdvertisement(String title, String address, String cost, String contacts, String author,) async {
+  Future<Advertisement> createAdvertisement(String title, String address,
+  int cost, String description, String contacts, int author, int square,
+      int floor, int type, int floors, int heating, bool fridge, bool microwave,
+      bool washMachine, bool oven, bool conditioner, bool router, bool TV) async {
     final response = await http.post(
       Uri.parse('https://estate-alarm.herokuapp.com/api/announcement/?format=json'),
       headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
+        'Content-Type': 'application/json',
       },
 
       body: jsonEncode({
         'title': title,
         'address': address,
         'cost': cost,
-        'description': 'пост тест',
+        'description': description,
         'contacts': contacts,
-        'author': author,
-        /*'filters': {1, 30, 12, 2, 12, 1, true, true, true, true, true, true},*/
-
+        "author": author,
+        "square": square,
+        "floor": floor,
+        "type": type,
+        "floors": floors,
+        "heating": heating,
+        "fridge": fridge,
+        "microwave": microwave,
+        "washMachine": washMachine,
+        "oven": oven,
+        "conditioner": conditioner,
+        "router": router,
+        "TV": TV,
       }),
     );
     print(response.statusCode);

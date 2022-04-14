@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-List<Advertisement> postFromJson(str) => str.map<Advertisement>((x) => Advertisement.fromJson(x)).toList();
+List<Advertisement> advertisementFromJson(str) => str.map<Advertisement>((x) => Advertisement.fromJson(x)).toList();
 
-String postToJson(List<Advertisement> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String advertisementToJson(List<Advertisement> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class Advertisement {
   Advertisement({
@@ -11,50 +11,8 @@ class Advertisement {
     required this.address,
     required this.cost,
     required this.description,
-    required this.filters,
     required this.contacts,
     required this.pubDate,
-    required this.author,
-  });
-
-  int id;
-  Filters filters;
-  String title;
-  String address;
-  int cost;
-  String description;
-  String contacts;
-  DateTime pubDate;
-  int author;
-
-  factory Advertisement.fromJson(Map<String, dynamic> json) => Advertisement(
-    id: json["id"],
-    filters: Filters.fromJson(json["filters"]),
-    title: json["title"],
-    address: json["address"],
-    cost: json["cost"],
-    description: json["description"],
-    contacts: json["contacts"],
-    pubDate: DateTime.parse(json["pub_date"]),
-    author: json["author"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "id": id,
-    "filters": filters.toJson(),
-    "title": title,
-    "address": address,
-    "cost": cost,
-    "description": description,
-    "contacts": contacts,
-    "pub_date": pubDate.toIso8601String(),
-    "author": author,
-  };
-}
-
-class Filters {
-  Filters({
-    required this.id,
     required this.square,
     required this.floor,
     required this.type,
@@ -67,9 +25,16 @@ class Filters {
     required this.conditioner,
     required this.router,
     required this.tv,
+    required this.author,
   });
 
   int id;
+  String title;
+  String address;
+  int cost;
+  String description;
+  String contacts;
+  DateTime pubDate;
   double square;
   int floor;
   int type;
@@ -82,10 +47,17 @@ class Filters {
   bool conditioner;
   bool router;
   bool tv;
+  int author;
 
-  factory Filters.fromJson(Map<String, dynamic> json) => Filters(
+  factory Advertisement.fromJson(Map<String, dynamic> json) => Advertisement(
     id: json["id"],
-    square: json["square"].toDouble(),
+    title: json["title"],
+    address: json["address"],
+    cost: json["cost"],
+    description: json["description"],
+    contacts: json["contacts"],
+    pubDate: DateTime.parse(json["pub_date"]),
+    square: json["square"],
     floor: json["floor"],
     type: json["type"],
     floors: json["floors"],
@@ -97,10 +69,17 @@ class Filters {
     conditioner: json["conditioner"],
     router: json["router"],
     tv: json["TV"],
+    author: json["author"],
   );
 
   Map<String, dynamic> toJson() => {
     "id": id,
+    "title": title,
+    "address": address,
+    "cost": cost,
+    "description": description,
+    "contacts": contacts,
+    "pub_date": pubDate.toIso8601String(),
     "square": square,
     "floor": floor,
     "type": type,
@@ -113,5 +92,6 @@ class Filters {
     "conditioner": conditioner,
     "router": router,
     "TV": tv,
+    "author": author,
   };
 }

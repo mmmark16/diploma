@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:diploma/ui/ads_base.dart';
 import 'package:flutter/material.dart';
 import 'package:like_button/like_button.dart';
@@ -13,6 +14,12 @@ class Ads extends StatelessWidget {
   final int author;
   final double square;
   final bool fridge;
+  final bool microwave;
+  final bool washMachine;
+  final bool oven;
+  final bool conditioner;
+  final bool router;
+  final bool tv;
 
   const Ads(
       {required this.image,
@@ -23,7 +30,14 @@ class Ads extends StatelessWidget {
       required this.contacts,
       required this.pubDate,
       required this.author,
-      required this.square, required this.fridge});
+      required this.square,
+      required this.fridge,
+      required this.microwave,
+      required this.washMachine,
+      required this.oven,
+      required this.conditioner,
+      required this.router,
+      required this.tv});
 
   @override
   Widget build(BuildContext context) {
@@ -41,9 +55,12 @@ class Ads extends StatelessWidget {
           children: [
             Stack(
               children: [
-                Image.asset(
-                  image,
-                ),
+                Image.network(image),
+                /*CachedNetworkImage(
+                  imageUrl: image,
+                  placeholder: (context, url) => CircularProgressIndicator(),
+                  errorWidget: (context, url, error) => Icon(Icons.error),
+                ),*/
                 Positioned(
                   right: 8,
                   top: 8,
@@ -113,8 +130,15 @@ class Ads extends StatelessWidget {
                               contacts: contacts,
                               author: author,
                               pubDate: pubDate,
-                              address: address, square: square,
-                          fridge: fridge,
+                              address: address,
+                              square: square,
+                              fridge: fridge,
+                              router: router,
+                              microwave: microwave,
+                              oven: oven,
+                              washMachine: washMachine,
+                              tv: tv,
+                              conditioner: conditioner,
                             )),
                   );
                 },

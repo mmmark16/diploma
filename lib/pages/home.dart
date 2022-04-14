@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:like_button/like_button.dart';
 import 'package:http/http.dart' as http;
 
+import '../model/Image.dart';
 import '../services/remote_services.dart';
 
 class Home extends StatefulWidget {
@@ -15,19 +16,20 @@ class Home extends StatefulWidget {
 
 class _Home extends State<Home> {
   List<Advertisement>? advertisements;
+  List<Images>? image;
 
   var isLoaded = false;
 
   @override
   void initState() {
     super.initState();
-
     getData();
   }
 
   getData() async {
+    image = await RemoteService().getImage();
     advertisements = await RemoteService().getAdvertisement();
-    if (advertisements != null) {
+    if (advertisements != null && image != null) {
       setState(() {
         isLoaded = true;
       });
@@ -50,7 +52,7 @@ class _Home extends State<Home> {
           itemCount: advertisements?.length,
           itemBuilder: (context, index) {
             return Ads(
-              image: 'assets/3.png',
+              image: image![index].image,
               title: advertisements![index].title,
               cost: advertisements![index].cost.toString(),
               description: advertisements![index].description,
@@ -58,8 +60,14 @@ class _Home extends State<Home> {
               address: advertisements![index].title,
               pubDate: advertisements![index].pubDate,
               author: advertisements![index].author,
-              square: advertisements![index].filters.square,
-              fridge: advertisements![index].filters.fridge,
+              square: advertisements![index].square,
+              fridge: advertisements![index].fridge,
+              oven: advertisements![index].oven,
+              microwave: advertisements![index].microwave,
+              tv: advertisements![index].tv,
+              conditioner: advertisements![index].conditioner,
+              washMachine: advertisements![index].washMachine,
+              router: advertisements![index].router,
             );
           },
         ),
