@@ -23,27 +23,31 @@ class Ads extends StatelessWidget {
   final int floor;
   final int floors;
 
-  const Ads(
-      {required this.image,
-      required this.title,
-      required this.cost,
-      required this.description,
-      required this.address,
-      required this.contacts,
-      required this.pubDate,
-      required this.author,
-      required this.square,
-      required this.fridge,
-      required this.microwave,
-      required this.washMachine,
-      required this.oven,
-      required this.conditioner,
-      required this.router,
-      required this.tv, required this.floor, required this.floors,});
+  const Ads({
+    required this.image,
+    required this.title,
+    required this.cost,
+    required this.description,
+    required this.address,
+    required this.contacts,
+    required this.pubDate,
+    required this.author,
+    required this.square,
+    required this.fridge,
+    required this.microwave,
+    required this.washMachine,
+    required this.oven,
+    required this.conditioner,
+    required this.router,
+    required this.tv,
+    required this.floor,
+    required this.floors,
+  });
 
-  String loadimage(String images){
-    if (images == null){
-      images = 'https://i.kinja-img.com/gawker-media/image/upload/c_fill,f_auto,fl_progressive,g_center,h_675,pg_1,q_80,w_1200/g5nq3mokuc8fvn3jpfvu.png';
+  String loadimage(String images) {
+    if (images == null) {
+      images =
+          'https://i.kinja-img.com/gawker-media/image/upload/c_fill,f_auto,fl_progressive,g_center,h_675,pg_1,q_80,w_1200/g5nq3mokuc8fvn3jpfvu.png';
     }
     return images;
   }
@@ -64,10 +68,10 @@ class Ads extends StatelessWidget {
           children: [
             Stack(
               children: [
-
                 CachedNetworkImage(
                   imageUrl: loadimage(image),
-                  placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                  placeholder: (context, url) =>
+                      Center(child: CircularProgressIndicator()),
                   errorWidget: (context, url, error) => Icon(Icons.error),
                 ),
                 Positioned(
@@ -108,7 +112,8 @@ class Ads extends StatelessWidget {
             Padding(
               padding: EdgeInsets.only(left: 16, top: 12, right: 16)
                   .copyWith(bottom: 0),
-              child: Text('Цена: ${cost} руб. в месяц',
+              child: Text(
+                'Цена: ${cost} руб. в месяц',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
             ),
@@ -131,23 +136,24 @@ class Ads extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                         builder: (context) => AdsBase(
-                              title: title,
-                              cost: cost,
-                              image: image,
-                              description: description,
-                              contacts: contacts,
-                              author: author,
-                              pubDate: pubDate,
-                              address: address,
-                              square: square,
-                              fridge: fridge,
-                              router: router,
-                              microwave: microwave,
-                              oven: oven,
-                              washMachine: washMachine,
-                              tv: tv,
-                              conditioner: conditioner, floors: floors, floor: floor
-                            )),
+                            title: title,
+                            cost: cost,
+                            image: image,
+                            description: description,
+                            contacts: contacts,
+                            author: author,
+                            pubDate: pubDate,
+                            address: address,
+                            square: square,
+                            fridge: fridge,
+                            router: router,
+                            microwave: microwave,
+                            oven: oven,
+                            washMachine: washMachine,
+                            tv: tv,
+                            conditioner: conditioner,
+                            floors: floors,
+                            floor: floor)),
                   );
                 },
               ),

@@ -7,6 +7,7 @@ import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.da
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'clock.dart';
 import 'hive.dart';
 import 'pages/alarm_clock.dart';
 import 'pages/home.dart';
@@ -116,7 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
           backgroundColor: const Color(0xff83C17F),
           onPressed: () {
             Navigator.push(
-                context, MaterialPageRoute(builder: (_) => Alarm()));
+                context, MaterialPageRoute(builder: (_) => Clock()));
           },
           tooltip: 'Alarm',
           child: const Icon(Icons.watch_later, color: Colors.white,),

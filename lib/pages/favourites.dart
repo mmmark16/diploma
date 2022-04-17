@@ -9,7 +9,7 @@ class FV extends StatelessWidget {
     return Container(
       height: 372,
       child: Ads(
-          image: 'https://estate-alarm.herokuapp.com/media/announcement_14/error.png',
+          image: 'https://estate-alarm.herokuapp.com/media/announcement_19/error.png',
           title: 'тест объявление',
           cost: '100',
           description: 'тест объявление',

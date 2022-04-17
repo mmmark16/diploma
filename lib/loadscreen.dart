@@ -1,3 +1,4 @@
+import 'package:diploma/clockput.dart';
 import 'package:flutter/material.dart';
 
 class LoadScreen extends StatelessWidget {
@@ -45,18 +46,24 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              CircularProgressIndicator(
-                value: controller.value,
-                color: const Color(0xff246E46),
-              ),
-            ],
+    return GestureDetector(
+      onTap: () {Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SuperClock()),
+    );},
+      child: Scaffold(
+        body: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                CircularProgressIndicator(
+                  value: controller.value,
+                  color: const Color(0xff246E46),
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -42,7 +42,7 @@ class UserPr extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 32.0, left: 24, bottom: 24),
             child: Text(
-              'Логин: Usertest',
+              'Логин: User',
               style: TextStyle(fontSize: 24, color: Color(0xff83C17F)),
             ),
           ),
