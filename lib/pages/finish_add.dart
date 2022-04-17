@@ -1,6 +1,8 @@
 import 'package:diploma/pages/home.dart';
 import 'package:flutter/material.dart';
 
+import '../main.dart';
+
 class FinishAdd extends StatelessWidget {
   const FinishAdd({Key? key}) : super(key: key);
 
@@ -23,7 +25,7 @@ class FinishAdd extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Home()),
+                  MaterialPageRoute(builder: (context) => MyApp(login: true,)),
                 );
               },
               child: Text('Вернутьс на главный экран', style: TextStyle(fontSize: 24),)),

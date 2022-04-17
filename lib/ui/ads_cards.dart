@@ -20,6 +20,8 @@ class Ads extends StatelessWidget {
   final bool conditioner;
   final bool router;
   final bool tv;
+  final int floor;
+  final int floors;
 
   const Ads(
       {required this.image,
@@ -37,7 +39,7 @@ class Ads extends StatelessWidget {
       required this.oven,
       required this.conditioner,
       required this.router,
-      required this.tv});
+      required this.tv, required this.floor, required this.floors,});
 
   String loadimage(String images){
     if (images == null){
@@ -144,7 +146,7 @@ class Ads extends StatelessWidget {
                               oven: oven,
                               washMachine: washMachine,
                               tv: tv,
-                              conditioner: conditioner,
+                              conditioner: conditioner, floors: floors, floor: floor
                             )),
                   );
                 },

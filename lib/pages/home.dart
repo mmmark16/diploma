@@ -71,6 +71,8 @@ class _Home extends State<Home> {
               conditioner: advertisements![index].conditioner,
               washMachine: advertisements![index].washMachine,
               router: advertisements![index].router,
+              floor: advertisements![index].floor,
+              floors: advertisements![index].floors,
             );
           },
         ),

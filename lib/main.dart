@@ -1,10 +1,12 @@
 
 import 'package:diploma/pages/favourites.dart';
 import 'package:diploma/login.dart';
+import 'package:diploma/pred_protected/alarm.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'hive.dart';
 import 'pages/alarm_clock.dart';
 import 'pages/home.dart';
@@ -12,30 +14,35 @@ import 'pages/messenger.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  final prefs = await SharedPreferences.getInstance();
+  final login = prefs.getBool('login') ?? false;
   await Hive.initFlutter();
   Hive.registerAdapter(UserAdapter());
-  runApp(const MyApp());
+  runApp(MyApp(login: login));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  final bool login;
+  const MyApp({Key? key, required this.login,}) : super(key: key);
 
   @override
-  MyApp createState() => MyApp();
+  MyApp createState() => MyApp(login: login,);
+
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: MyHomePage.green,
       ),
-      home: MyHomePage(title: ''),
+      home: MyHomePage(title: '', login: login,),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
+  final bool login;
 
-  MyHomePage({Key? key, required this.title}) : super(key: key);
+  MyHomePage({Key? key, required this.title, required this.login}) : super(key: key);
   final String title;
 
   final iconList = <IconData>[
@@ -68,34 +75,35 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   var _bottomNavIndex = 0;
 
-  final List<Widget> screens = [
-    const Home(),
-    Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "ИЗБРАННОЕ",
-          style: TextStyle(color: Color(0xff246E46)),
-        ),
-        centerTitle: true,
-      ),
-      body: FV(),
-    ),
-     MS(),
-    Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "ПРОФИЛЬ",
-          style: TextStyle(color: Color(0xff246E46)),
-        ),
-        centerTitle: true,
-      ),
-      body: PR(),
-    ),
-  ]; // to store nested tabs
-  final PageStorageBucket bucket = PageStorageBucket();
 
   @override
   Widget build(BuildContext context) {
+
+    final List<Widget> screens = [
+      const Home(),
+      Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            "ИЗБРАННОЕ",
+            style: TextStyle(color: Color(0xff246E46)),
+          ),
+          centerTitle: true,
+        ),
+        body: FV(),
+      ),
+      MS(),
+      Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            "ПРОФИЛЬ",
+            style: TextStyle(color: Color(0xff246E46)),
+          ),
+          centerTitle: true,
+        ),
+        body: PR(login: widget.login),
+      ),
+    ]; // to store nested tabs
+    final PageStorageBucket bucket = PageStorageBucket();
     return Scaffold(
         body: PageStorage(
         bucket: bucket,

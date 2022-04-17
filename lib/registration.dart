@@ -1,6 +1,9 @@
+import 'package:diploma/login.dart';
+import 'package:diploma/pred_protected/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'hive.dart';
 
 class REG extends StatelessWidget {
@@ -87,11 +90,15 @@ class REG extends StatelessWidget {
                     child: MaterialButton(
                       height: 50.0,
                       minWidth: 300.0,
-                      onPressed: (){
-                        var person = User(_email.value.text, _confirmPass.value.text);
+                      onPressed: () async {
+                        /*var person = User(_email.value.text, _confirmPass.value.text);
                         snapshot.data!.add(person);
                         print(snapshot.data!.getAt(0));
-                        snapshot.data!.close();
+                        snapshot.data!.close();*/
+                        final prefs = await SharedPreferences.getInstance();
+                        prefs.setBool('login', true);
+                        Navigator.of(context).push(
+                            MaterialPageRoute(builder: (context) => PR(login: prefs.getBool('login')!)));
                         },
                       child: Text(
                         "ЗАРЕГЕСТРИРОВАТЬТСЯ",

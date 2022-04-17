@@ -20,6 +20,8 @@ class AdsBase extends StatelessWidget {
   final bool conditioner;
   final bool router;
   final bool tv;
+  final int floor;
+  final int floors;
 
   const AdsBase(
       {required this.image,
@@ -37,7 +39,7 @@ class AdsBase extends StatelessWidget {
       required this.oven,
       required this.conditioner,
       required this.router,
-      required this.tv});
+      required this.tv, required this.floor, required this.floors});
 
   String check(bool filters) {
     if (filters == true) {
@@ -94,7 +96,8 @@ class AdsBase extends StatelessWidget {
               borderRadius: BorderRadius.all(Radius.circular(12)),
               child: CachedNetworkImage(
                 imageUrl: image,
-                placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                placeholder: (context, url) =>
+                    Center(child: CircularProgressIndicator()),
                 errorWidget: (context, url, error) => Icon(Icons.error),
               ),
             ),
@@ -123,6 +126,13 @@ class AdsBase extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(left: 16.0, top: 26),
             child: Text(
+              'Этаж: ${floor}/${floors}',
+              style: TextStyle(fontSize: 24, color: Color(0xff246E46)),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 16.0, top: 26),
+            child: Text(
               'УДОБСТВА: ',
               style: TextStyle(fontSize: 20, color: Color(0xff246E46)),
             ),
@@ -135,22 +145,57 @@ class AdsBase extends StatelessWidget {
                   color: Colors.white,
                   boxShadow: const [
                     BoxShadow(
-                        color: Color.fromRGBO(67, 66, 68, 0.08),
-                        blurRadius: 24)
+                        color: Color.fromRGBO(67, 66, 68, 0.08), blurRadius: 24)
                   ]),
               child: Column(
                 children: [
-                  Padding(padding: const EdgeInsets.all(4.0),),
-                  Conveniences(text: 'Холодильник', visible: fridge, icon: Icons.ac_unit, ),
-                  Conveniences(text: 'Микроволновка', visible: microwave, icon: Icons.microwave, ),
-                  Conveniences(text: 'Стиральная машина', visible: washMachine, icon: Icons.water_drop, ),
-                  Conveniences(text: 'Печь', visible: oven, icon: Icons.bakery_dining, ),
-                  Conveniences(text: 'Кондиционер', visible: conditioner, icon: Icons.air, ),
-                  Conveniences(text: 'Роутер', visible: router, icon: Icons.wifi, ),
-                  Conveniences(text: 'Телевизор', visible: tv, icon: Icons.tv, ),
-                  ],
+                  Padding(
+                    padding: const EdgeInsets.all(4.0),
+                  ),
+                  Conveniences(
+                    text: 'Холодильник',
+                    visible: fridge,
+                    icon: Icons.ac_unit,
+                  ),
+                  Conveniences(
+                    text: 'Микроволновка',
+                    visible: microwave,
+                    icon: Icons.microwave,
+                  ),
+                  Conveniences(
+                    text: 'Стиральная машина',
+                    visible: washMachine,
+                    icon: Icons.water_drop,
+                  ),
+                  Conveniences(
+                    text: 'Печь',
+                    visible: oven,
+                    icon: Icons.bakery_dining,
+                  ),
+                  Conveniences(
+                    text: 'Кондиционер',
+                    visible: conditioner,
+                    icon: Icons.air,
+                  ),
+                  Conveniences(
+                    text: 'Роутер',
+                    visible: router,
+                    icon: Icons.wifi,
+                  ),
+                  Conveniences(
+                    text: 'Телевизор',
+                    visible: tv,
+                    icon: Icons.tv,
+                  ),
+
+                ],
               ),
             ),
+          ),
+          TextButton(onPressed: (){}, child: Text('Связаться с владельцем')),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text('Объявление создано: ${pubDate.toString().substring(0, 19)}'),
           )
         ],
       ),

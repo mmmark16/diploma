@@ -169,7 +169,7 @@ class _Add_advState extends State<Add_adv> {
                     fillColor: Color(0xff83C17F),
                     filled: true)),
           ),
-          const Padding(
+          /*const Padding(
             padding: EdgeInsets.all(16.0),
             child: Text(
               'Автор',
@@ -186,7 +186,7 @@ class _Add_advState extends State<Add_adv> {
                     hintText: "Введите автора 1",
                     fillColor: Color(0xff83C17F),
                     filled: true)),
-          ),
+          ),*/
           const Padding(
             padding: EdgeInsets.all(16.0),
             child: Text(
@@ -375,7 +375,7 @@ class _Add_advState extends State<Add_adv> {
               ),
               onTap: () {
                 RemoteService().createAdvertisement(_controllertitle.text, _controlleraddress.text, int.parse(_controllercost.text),
-                    _controllerdescription.text, _controllercontact.text, int.parse(_controllerauthor.text),
+                    _controllerdescription.text, _controllercontact.text, 1,
                     int.parse(_controllersquare.text), int.parse(_controllerfloor.text), int.parse(typeValue), int.parse(_controllerfloors.text),
                     int.parse(heatingValue), checklist[0], checklist[1], checklist[2], checklist[3], checklist[4], checklist[5], checklist[6]);
                 //RemoteService().createAdvertisement();
