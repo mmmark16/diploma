@@ -39,6 +39,13 @@ class Ads extends StatelessWidget {
       required this.router,
       required this.tv});
 
+  String loadimage(String images){
+    if (images == null){
+      images = 'https://i.kinja-img.com/gawker-media/image/upload/c_fill,f_auto,fl_progressive,g_center,h_675,pg_1,q_80,w_1200/g5nq3mokuc8fvn3jpfvu.png';
+    }
+    return images;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -55,12 +62,12 @@ class Ads extends StatelessWidget {
           children: [
             Stack(
               children: [
-                Image.network(image),
-                /*CachedNetworkImage(
-                  imageUrl: image,
-                  placeholder: (context, url) => CircularProgressIndicator(),
+
+                CachedNetworkImage(
+                  imageUrl: loadimage(image),
+                  placeholder: (context, url) => Center(child: CircularProgressIndicator()),
                   errorWidget: (context, url, error) => Icon(Icons.error),
-                ),*/
+                ),
                 Positioned(
                   right: 8,
                   top: 8,
@@ -99,8 +106,7 @@ class Ads extends StatelessWidget {
             Padding(
               padding: EdgeInsets.only(left: 16, top: 12, right: 16)
                   .copyWith(bottom: 0),
-              child: Text(
-                cost,
+              child: Text('Цена: ${cost} руб. в месяц',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
             ),

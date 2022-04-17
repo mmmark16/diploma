@@ -1,3 +1,4 @@
+import 'package:diploma/pages/finish_add.dart';
 import 'package:diploma/services/remote_services.dart';
 import 'package:diploma/ui/checkBox_filters.dart';
 import 'package:flutter/cupertino.dart';
@@ -116,13 +117,14 @@ class _Add_advState extends State<Add_adv> {
           const Padding(
             padding: EdgeInsets.all(16.0),
             child: Text(
-              'Цена',
+              'Цена (рублей в месяц)',
               style: TextStyle(color: Color(0xff246E46), fontSize: 20),
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(right: 16.0, left: 16),
             child: TextField(
+              keyboardType: TextInputType.number,
                 cursorColor: Colors.black,
                 controller: _controllercost,
                 decoration: const InputDecoration(
@@ -377,6 +379,10 @@ class _Add_advState extends State<Add_adv> {
                     int.parse(_controllersquare.text), int.parse(_controllerfloor.text), int.parse(typeValue), int.parse(_controllerfloors.text),
                     int.parse(heatingValue), checklist[0], checklist[1], checklist[2], checklist[3], checklist[4], checklist[5], checklist[6]);
                 //RemoteService().createAdvertisement();
+              Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => FinishAdd()),
+              );
               },
             ),
           )

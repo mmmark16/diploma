@@ -1,3 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:diploma/ui/conveniences.dart';
 import 'package:flutter/material.dart';
 import 'package:like_button/like_button.dart';
 
@@ -36,6 +38,14 @@ class AdsBase extends StatelessWidget {
       required this.conditioner,
       required this.router,
       required this.tv});
+
+  String check(bool filters) {
+    if (filters == true) {
+      return 'есть';
+    } else {
+      return 'отсутствует';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,79 +92,66 @@ class AdsBase extends StatelessWidget {
             padding: const EdgeInsets.all(16.0),
             child: ClipRRect(
               borderRadius: BorderRadius.all(Radius.circular(12)),
-              child: Image.network(image),
+              child: CachedNetworkImage(
+                imageUrl: image,
+                placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                errorWidget: (context, url, error) => Icon(Icons.error),
+              ),
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 16.0, right: 16),
             child: Text(
-              'Цена: ${cost}',
-              style: TextStyle(fontSize: 28, color: Color(0xff246E46)),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 16.0, top: 26),
-            child: Text(
-              description,
+              'Цена: ${cost} рублей в месяц',
               style: TextStyle(fontSize: 24, color: Color(0xff246E46)),
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 16.0, top: 26),
             child: Text(
-              square.toString(),
+              'Описание: ${description}',
+              style: TextStyle(fontSize: 20, color: Color(0xff246E46)),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 16.0, top: 26),
+            child: Text(
+              'Площадь: ${square.toString()} м2',
               style: TextStyle(fontSize: 24, color: Color(0xff246E46)),
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 16.0, top: 26),
             child: Text(
-              'Наличие холодильника ${fridge}',
-              style: TextStyle(fontSize: 24, color: Color(0xff246E46)),
+              'УДОБСТВА: ',
+              style: TextStyle(fontSize: 20, color: Color(0xff246E46)),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 16.0, top: 26),
-            child: Text(
-              'Наличие холодильника ${microwave}',
-              style: TextStyle(fontSize: 24, color: Color(0xff246E46)),
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(24),
+                  color: Colors.white,
+                  boxShadow: const [
+                    BoxShadow(
+                        color: Color.fromRGBO(67, 66, 68, 0.08),
+                        blurRadius: 24)
+                  ]),
+              child: Column(
+                children: [
+                  Padding(padding: const EdgeInsets.all(4.0),),
+                  Conveniences(text: 'Холодильник', visible: fridge, icon: Icons.ac_unit, ),
+                  Conveniences(text: 'Микроволновка', visible: microwave, icon: Icons.microwave, ),
+                  Conveniences(text: 'Стиральная машина', visible: washMachine, icon: Icons.water_drop, ),
+                  Conveniences(text: 'Печь', visible: oven, icon: Icons.bakery_dining, ),
+                  Conveniences(text: 'Кондиционер', visible: conditioner, icon: Icons.air, ),
+                  Conveniences(text: 'Роутер', visible: router, icon: Icons.wifi, ),
+                  Conveniences(text: 'Телевизор', visible: tv, icon: Icons.tv, ),
+                  ],
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 16.0, top: 26),
-            child: Text(
-              'Наличие холодильника ${washMachine}',
-              style: TextStyle(fontSize: 24, color: Color(0xff246E46)),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 16.0, top: 26),
-            child: Text(
-              'Наличие холодильника ${oven}',
-              style: TextStyle(fontSize: 24, color: Color(0xff246E46)),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 16.0, top: 26),
-            child: Text(
-              'Наличие холодильника ${conditioner}',
-              style: TextStyle(fontSize: 24, color: Color(0xff246E46)),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 16.0, top: 26),
-            child: Text(
-              'Наличие холодильника ${router}',
-              style: TextStyle(fontSize: 24, color: Color(0xff246E46)),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 16.0, top: 26),
-            child: Text(
-              'Наличие холодильника ${tv}',
-              style: TextStyle(fontSize: 24, color: Color(0xff246E46)),
-            ),
-          ),
+          )
         ],
       ),
     );

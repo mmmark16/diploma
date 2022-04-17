@@ -1,8 +1,6 @@
 import 'package:diploma/model/advertisement.dart';
 import 'package:diploma/ui/ads_cards.dart';
 import 'package:flutter/material.dart';
-import 'package:like_button/like_button.dart';
-import 'package:http/http.dart' as http;
 
 import '../model/Image.dart';
 import '../services/remote_services.dart';
@@ -17,6 +15,7 @@ class Home extends StatefulWidget {
 class _Home extends State<Home> {
   List<Advertisement>? advertisements;
   List<Images>? image;
+  late Map <int, String> imagesToAdv;
 
   var isLoaded = false;
 
@@ -25,6 +24,8 @@ class _Home extends State<Home> {
     super.initState();
     getData();
   }
+
+
 
   getData() async {
     image = await RemoteService().getImage();
@@ -35,6 +36,8 @@ class _Home extends State<Home> {
       });
     }
   }
+
+
 
   @override
   Widget build(BuildContext context) {
