@@ -1,25 +1,25 @@
-import 'package:diploma/pages/finish_add.dart';
+import 'package:diploma/pages/ResualtPage.dart';
 import 'package:diploma/services/remote_services.dart';
 import 'package:diploma/ui/checkBox_filters.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../model/Advertisement.dart';
 
-class Add_adv extends StatefulWidget {
+class Search extends StatefulWidget {
+  const Search({Key? key}) : super(key: key);
 
   @override
-  _Add_advState createState() => _Add_advState();
+  State<Search> createState() => _SearchState();
 }
 
-final TextEditingController _controllertitle = TextEditingController();
-final TextEditingController _controlleraddress = TextEditingController();
-final TextEditingController _controllercost = TextEditingController();
-final TextEditingController _controllerdescription = TextEditingController();
-final TextEditingController _controllercontact = TextEditingController();
-final TextEditingController _controllerauthor = TextEditingController();
-final TextEditingController _controllersquare = TextEditingController();
-final TextEditingController _controllerfloor = TextEditingController();
-final TextEditingController _controllerfloors = TextEditingController();
 
+final TextEditingController _controllermincost = TextEditingController();
+final TextEditingController _controllermaxcost = TextEditingController();
+final TextEditingController _controlleraddress = TextEditingController();
+final TextEditingController _controllerminsquare = TextEditingController();
+final TextEditingController _controllermaxsquare = TextEditingController();
+final TextEditingController _controllerminfloor = TextEditingController();
+final TextEditingController _controllermaxfloor = TextEditingController();
+final TextEditingController _controllerfloor = TextEditingController();
 
 const List<String> namelist = [
   'Холодильник',
@@ -45,8 +45,8 @@ String heatingValue = '1';
 
 bool isChecked = false;
 
-
-class _Add_advState extends State<Add_adv> {
+class _SearchState extends State<Search> {
+  late Advertisement advertisements;
 
   List<bool> checklist = [false, false, false, false, false, false, false];
 
@@ -65,7 +65,7 @@ class _Add_advState extends State<Add_adv> {
         children: [
           AppBar(
             title: const Text(
-              'Создание объявления',
+              'Поиск объявления',
               style: TextStyle(color: Color(0xff246E46)),
             ),
             leading: IconButton(
@@ -81,7 +81,7 @@ class _Add_advState extends State<Add_adv> {
           const Padding(
             padding: EdgeInsets.all(16.0),
             child: Text(
-              'Название',
+              'Минимальная стоимость',
               style: TextStyle(color: Color(0xff246E46), fontSize: 20),
             ),
           ),
@@ -89,17 +89,37 @@ class _Add_advState extends State<Add_adv> {
             padding: const EdgeInsets.only(right: 16.0, left: 16),
             child: TextField(
                 cursorColor: Colors.black,
-                controller: _controllertitle,
+                keyboardType: TextInputType.number,
+                controller: _controllermincost,
                 decoration: const InputDecoration(
                     border: InputBorder.none,
-                    hintText: "Введите название",
+                    hintText: "мин",
                     fillColor: Color(0xff83C17F),
                     filled: true)),
           ),
           const Padding(
             padding: EdgeInsets.all(16.0),
             child: Text(
-              'Расположение',
+              'Максимальная стоимость',
+              style: TextStyle(color: Color(0xff246E46), fontSize: 20),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0, left: 16),
+            child: TextField(
+                cursorColor: Colors.black,
+                keyboardType: TextInputType.number,
+                controller: _controllermaxcost,
+                decoration: const InputDecoration(
+                    border: InputBorder.none,
+                    hintText: "макс",
+                    fillColor: Color(0xff83C17F),
+                    filled: true)),
+          ),
+          const Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Text(
+              'Адрес',
               style: TextStyle(color: Color(0xff246E46), fontSize: 20),
             ),
           ),
@@ -110,25 +130,6 @@ class _Add_advState extends State<Add_adv> {
                 controller: _controlleraddress,
                 decoration: const InputDecoration(
                     border: InputBorder.none,
-                    hintText: "Введите адрес",
-                    fillColor: Color(0xff83C17F),
-                    filled: true)),
-          ),
-          const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Text(
-              'Цена (рублей в месяц)',
-              style: TextStyle(color: Color(0xff246E46), fontSize: 20),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 16.0, left: 16),
-            child: TextField(
-              keyboardType: TextInputType.number,
-                cursorColor: Colors.black,
-                controller: _controllercost,
-                decoration: const InputDecoration(
-                    border: InputBorder.none,
                     hintText: "Укажите стоимость",
                     fillColor: Color(0xff83C17F),
                     filled: true)),
@@ -136,7 +137,7 @@ class _Add_advState extends State<Add_adv> {
           const Padding(
             padding: EdgeInsets.all(16.0),
             child: Text(
-              'Об объекте',
+              'Минимальная площадь',
               style: TextStyle(color: Color(0xff246E46), fontSize: 20),
             ),
           ),
@@ -144,65 +145,68 @@ class _Add_advState extends State<Add_adv> {
             padding: const EdgeInsets.only(right: 16.0, left: 16),
             child: TextField(
                 cursorColor: Colors.black,
-                controller: _controllerdescription,
-                decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    hintText: "Введите описание",
-                    fillColor: Color(0xff83C17F),
-                    filled: true)),
-          ),
-          const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Text(
-              'Контакты',
-              style: TextStyle(color: Color(0xff246E46), fontSize: 20),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 16.0, left: 16),
-            child: TextField(
-                cursorColor: Colors.black,
-                controller: _controllercontact,
-                decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    hintText: "Введите свои контакты",
-                    fillColor: Color(0xff83C17F),
-                    filled: true)),
-          ),
-          /*const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Text(
-              'Автор',
-              style: TextStyle(color: Color(0xff246E46), fontSize: 20),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 16.0, left: 16),
-            child: TextField(
-                cursorColor: Colors.black,
-                controller: _controllerauthor,
-                decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    hintText: "Введите автора 1",
-                    fillColor: Color(0xff83C17F),
-                    filled: true)),
-          ),*/
-          const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Text(
-              'Площадь',
-              style: TextStyle(color: Color(0xff246E46), fontSize: 20),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 16.0, left: 16),
-            child: TextField(
                 keyboardType: TextInputType.number,
-                cursorColor: Colors.black,
-                controller: _controllersquare,
+                controller: _controllerminsquare,
                 decoration: const InputDecoration(
                     border: InputBorder.none,
-                    hintText: "Общая площадь помещения",
+                    hintText: "мин",
+                    fillColor: Color(0xff83C17F),
+                    filled: true)),
+          ),
+          const Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Text(
+              'Максимальная площадь',
+              style: TextStyle(color: Color(0xff246E46), fontSize: 20),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0, left: 16),
+            child: TextField(
+                cursorColor: Colors.black,
+                keyboardType: TextInputType.number,
+                controller: _controllermaxsquare,
+                decoration: const InputDecoration(
+                    border: InputBorder.none,
+                    hintText: "макс",
+                    fillColor: Color(0xff83C17F),
+                    filled: true)),
+          ),
+          const Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Text(
+              'Минимальный этаж',
+              style: TextStyle(color: Color(0xff246E46), fontSize: 20),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0, left: 16),
+            child: TextField(
+                cursorColor: Colors.black,
+                keyboardType: TextInputType.number,
+                controller: _controllerminfloor,
+                decoration: const InputDecoration(
+                    border: InputBorder.none,
+                    hintText: "мин",
+                    fillColor: Color(0xff83C17F),
+                    filled: true)),
+          ),
+          const Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Text(
+              'Максимальный этаж',
+              style: TextStyle(color: Color(0xff246E46), fontSize: 20),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0, left: 16),
+            child: TextField(
+                cursorColor: Colors.black,
+                keyboardType: TextInputType.number,
+                controller: _controllermaxfloor,
+                decoration: const InputDecoration(
+                    border: InputBorder.none,
+                    hintText: "макс",
                     fillColor: Color(0xff83C17F),
                     filled: true)),
           ),
@@ -221,26 +225,7 @@ class _Add_advState extends State<Add_adv> {
                 controller: _controllerfloor,
                 decoration: const InputDecoration(
                     border: InputBorder.none,
-                    hintText: "Введите этаж помещения",
-                    fillColor: Color(0xff83C17F),
-                    filled: true)),
-          ),
-          const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Text(
-              'О здании',
-              style: TextStyle(color: Color(0xff246E46), fontSize: 20),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 16.0, left: 16),
-            child: TextField(
-                keyboardType: TextInputType.number,
-                cursorColor: Colors.black,
-                controller: _controllerfloors,
-                decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    hintText: "Введите количество этажей",
+                    hintText: "этаж",
                     fillColor: Color(0xff83C17F),
                     filled: true)),
           ),
@@ -348,7 +333,9 @@ class _Add_advState extends State<Add_adv> {
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemBuilder: (context, index) =>
-                CheckBoxFilters(text: namelist[index], icon: iconlist[index], callback: setbool(index),),
+                CheckBoxFilters(text: namelist[index],
+                  icon: iconlist[index],
+                  callback: setbool(index),),
           ),
           Padding(
             padding:
@@ -358,7 +345,7 @@ class _Add_advState extends State<Add_adv> {
                 height: 42,
                 child: const Center(
                     child: Text(
-                      'Сохранить',
+                      'Найти',
                       style: TextStyle(color: Color(0xff246E46), fontSize: 24),
                     )),
                 decoration: const BoxDecoration(
@@ -373,21 +360,34 @@ class _Add_advState extends State<Add_adv> {
                   ],
                 ),
               ),
-              onTap: () {
-                RemoteService().createAdvertisement(_controllertitle.text, _controlleraddress.text, int.parse(_controllercost.text),
-                    _controllerdescription.text, _controllercontact.text, 1,
-                    int.parse(_controllersquare.text), int.parse(_controllerfloor.text), int.parse(typeValue), int.parse(_controllerfloors.text),
-                    int.parse(heatingValue), checklist[0], checklist[1], checklist[2], checklist[3], checklist[4], checklist[5], checklist[6]);
-                //RemoteService().createAdvertisement();
-              Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => FinishAdd()),
-              );
+              onTap: () async {
+                advertisements = await RemoteService().searchAdvertisement(
+                    int.parse(_controllermincost.text),
+                    int.parse(_controllermaxcost.text),
+                    _controlleraddress.text,
+                    int.parse(_controllerminsquare.text),
+                    int.parse(_controllermaxsquare.text),
+                    int.parse(_controllerminfloor.text),
+                    int.parse(_controllermaxfloor.text),
+                    int.parse(_controllerfloor.text),
+                    int.parse(typeValue),
+                    int.parse(heatingValue),
+                    checklist[0],
+                    checklist[1],
+                    checklist[2],
+                    checklist[3],
+                    checklist[4],
+                    checklist[5],
+                    checklist[6]);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ResualtPage(adv: advertisements)),
+                );
               },
             ),
           )
         ],
       ),
-    );
+    );;
   }
 }

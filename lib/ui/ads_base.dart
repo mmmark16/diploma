@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:like_button/like_button.dart';
 
 class AdsBase extends StatelessWidget {
-  final String image;
+  //final String image;
   final String title;
   final String cost;
   final String description;
   final String address;
   final String contacts;
-  final DateTime pubDate;
+  final String pubDate;
   final int author;
   final double square;
   final bool fridge;
@@ -24,7 +24,7 @@ class AdsBase extends StatelessWidget {
   final int floors;
 
   const AdsBase(
-      {required this.image,
+      {//required this.image,
       required this.title,
       required this.cost,
       required this.description,
@@ -94,12 +94,12 @@ class AdsBase extends StatelessWidget {
             padding: const EdgeInsets.all(16.0),
             child: ClipRRect(
               borderRadius: BorderRadius.all(Radius.circular(12)),
-              child: CachedNetworkImage(
+              child: /*CachedNetworkImage(
                 imageUrl: image,
                 placeholder: (context, url) =>
                     Center(child: CircularProgressIndicator()),
                 errorWidget: (context, url, error) => Icon(Icons.error),
-              ),
+              )*/Image.network('https://avatars.mds.yandex.net/i?id=2a00000179f1bcbe3a8059d66b1f3dfa4616-4078287-images-thumbs&n=13'),
             ),
           ),
           Padding(
@@ -107,6 +107,13 @@ class AdsBase extends StatelessWidget {
             child: Text(
               'Цена: ${cost} рублей в месяц',
               style: TextStyle(fontSize: 24, color: Color(0xff246E46)),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 16.0, top: 26),
+            child: Text(
+              'Адрес: ${address}',
+              style: TextStyle(fontSize: 20, color: Color(0xff246E46)),
             ),
           ),
           Padding(
@@ -128,6 +135,13 @@ class AdsBase extends StatelessWidget {
             child: Text(
               'Этаж: ${floor}/${floors}',
               style: TextStyle(fontSize: 24, color: Color(0xff246E46)),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 16.0, top: 26),
+            child: Text(
+              'Связаться: ${contacts}',
+              style: TextStyle(fontSize: 20, color: Color(0xff246E46)),
             ),
           ),
           Padding(

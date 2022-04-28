@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 
 import '../main.dart';
 
-class FinishAdd extends StatelessWidget {
-  const FinishAdd({Key? key}) : super(key: key);
+class FinishReg extends StatelessWidget {
+  const FinishReg({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ class FinishAdd extends StatelessWidget {
           padding: const EdgeInsets.only(top: 350.0, left: 16, right: 16),
           child: Center(
             child: Text(
-              '       Объявление успешно добавлено',
+              'Вы успешно зарегестрировались',
               style: TextStyle(color: Color(0xff83C17F), fontSize: 36),
             ),
           ),
@@ -28,7 +28,7 @@ class FinishAdd extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => MyApp(login: true)),
                 );
               },
-              child: Text('Вернутьс на главный экран', style: TextStyle(fontSize: 24),)),
+              child: Text('Вернуться', style: TextStyle(fontSize: 24),)),
         )
       ]),
     );

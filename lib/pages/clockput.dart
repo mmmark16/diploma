@@ -3,7 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_alarm_clock/flutter_alarm_clock.dart';
 
 class SuperClock extends StatefulWidget {
-  const SuperClock({Key? key}) : super(key: key);
+  final int hour;
+  final int min;
+  const SuperClock({Key? key, required this.hour, required this.min}) : super(key: key);
 
   @override
   _SuperClockState createState() => _SuperClockState();
@@ -31,7 +33,6 @@ class _SuperClockState extends State<SuperClock> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-
                 Container(
                   height: 40,
                   width: 60,
@@ -45,7 +46,7 @@ class _SuperClockState extends State<SuperClock> {
                       child: TextField(
                         decoration: InputDecoration(
                           border: InputBorder.none,
-                          hintText: '11'
+                          hintText: '${widget.hour}'
                         ),
                         controller: hourController,
                         keyboardType: TextInputType.number,
@@ -67,7 +68,7 @@ class _SuperClockState extends State<SuperClock> {
                       child: TextField(
                         decoration: InputDecoration(
                             border: InputBorder.none,
-                            hintText: '10'
+                            hintText: '${widget.min}'
                         ),
                         controller: minuteController,
                         keyboardType: TextInputType.number,

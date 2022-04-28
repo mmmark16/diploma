@@ -1,15 +1,11 @@
-
+import 'package:diploma/model/UserApi.dart';
 import 'package:diploma/pages/favourites.dart';
 import 'package:diploma/login.dart';
-import 'package:diploma/pred_protected/alarm.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
-import 'package:hive/hive.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'clock.dart';
-import 'hive.dart';
-import 'pages/alarm_clock.dart';
+import 'pages/clock.dart';
+
 import 'pages/home.dart';
 import 'pages/messenger.dart';
 
@@ -17,9 +13,13 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
   final login = prefs.getBool('login') ?? false;
-  await Hive.initFlutter();
-  Hive.registerAdapter(UserAdapter());
-  runApp(MyApp(login: login));
+  final refresh = prefs.getString('refresh') ?? "";
+  final access = prefs.getString('access') ?? "";
+  final address = prefs.getString('address') ?? "";
+  final id = prefs.getInt('id');
+  final email = prefs.getString('email');
+  final username = prefs.getString('username');
+  runApp(MyApp(login: login,));
 }
 
 class MyApp extends StatelessWidget {
@@ -35,16 +35,16 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: MyHomePage.green,
       ),
-      home: MyHomePage(title: '', login: login,),
+      home: MyHomePage(login: login, BottomNavIndex: 0,),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
+  final int? BottomNavIndex;
   final bool login;
 
-  MyHomePage({Key? key, required this.title, required this.login}) : super(key: key);
-  final String title;
+  MyHomePage({Key? key, required this.login,  this.BottomNavIndex}) : super(key: key);
 
   final iconList = <IconData>[
     Icons.home,
@@ -75,6 +75,11 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   var _bottomNavIndex = 0;
+
+  @override
+  void initState(){
+      _bottomNavIndex = widget.BottomNavIndex?? 0 ;
+  }
 
 
   @override

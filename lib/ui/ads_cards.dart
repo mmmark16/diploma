@@ -1,19 +1,28 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:diploma/model/Favorites.dart';
 import 'package:diploma/ui/ads_base.dart';
 import 'package:flutter/material.dart';
 import 'package:like_button/like_button.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class Ads extends StatelessWidget {
-  final String image;
+import '../services/remote_services.dart';
+
+class Ads extends StatefulWidget {
+  //final String image;
+  final int id;
   final String title;
   final String cost;
   final String description;
   final String address;
   final String contacts;
-  final DateTime pubDate;
+  final String pubDate;
   final int author;
   final double square;
   final bool fridge;
+  final int type;
+  final int heating;
   final bool microwave;
   final bool washMachine;
   final bool oven;
@@ -23,8 +32,9 @@ class Ads extends StatelessWidget {
   final int floor;
   final int floors;
 
+
   const Ads({
-    required this.image,
+    //required this.image,
     required this.title,
     required this.cost,
     required this.description,
@@ -42,7 +52,17 @@ class Ads extends StatelessWidget {
     required this.tv,
     required this.floor,
     required this.floors,
+    required this.type,
+    required this.heating,
+    required this.id,
   });
+
+  @override
+  State<Ads> createState() => _AdsState();
+}
+
+class _AdsState extends State<Ads> {
+  bool isLiked = false;
 
   String loadimage(String images) {
     if (images == null) {
@@ -68,38 +88,73 @@ class Ads extends StatelessWidget {
           children: [
             Stack(
               children: [
-                CachedNetworkImage(
+                /*CachedNetworkImage(
                   imageUrl: loadimage(image),
                   placeholder: (context, url) =>
                       Center(child: CircularProgressIndicator()),
                   errorWidget: (context, url, error) => Icon(Icons.error),
-                ),
+                ),*/
+                Image.network(
+                    'https://avatars.mds.yandex.net/i?id=2a00000179f1bcbe3a8059d66b1f3dfa4616-4078287-images-thumbs&n=13'),
                 Positioned(
-                  right: 8,
-                  top: 8,
-                  child: LikeButton(
-                    size: 24,
-                    circleColor: CircleColor(
-                        start: Color(0xff83C17F), end: Color(0xff83C17F)),
-                    bubblesColor: BubblesColor(
-                      dotPrimaryColor: Color(0xff83C17F),
-                      dotSecondaryColor: Color(0xff83C17F),
-                    ),
-                    likeBuilder: (bool isLiked) {
-                      return Icon(
+                    right: 8,
+                    top: 8,
+                    child: GestureDetector(
+                      onTap: () async {
+                        if(isLiked){
+                          final prefs = await SharedPreferences.getInstance();
+                          final int? iduser = prefs.getInt('id');
+                          Favorites fav = await RemoteService().getFavoritedfromfull(widget.id, iduser!);
+                          log(fav.results[0].id.toString(), name: 'idfavoritlog');
+                          RemoteService().deleteFavorited(fav.results[0].id);
+                        }else{
+                          final prefs = await SharedPreferences.getInstance();
+                          final int? iduser = prefs.getInt('id');
+                          RemoteService().createFavorited(iduser!, widget.id);
+                        }
+
+                        setState(() {
+                          isLiked = !isLiked;
+                        });
+                      },
+                      child: Icon(
                         Icons.favorite,
-                        color: isLiked ? Color(0xff246E46) : Colors.white,
                         size: 24,
-                      );
-                    },
-                  ),
+                        color: isLiked ? Color(0xff246E46) : Colors.white,
+                      ),
+                    ),
+                    /*child: GestureDetector(
+                      onDoubleTap: () async {
+                        final prefs = await SharedPreferences.getInstance();
+                        final int? iduser = prefs.getInt('id');
+                        RemoteService().createFavorited(
+                            iduser!,
+                            id);
+                      },
+                      child: LikeButton(
+                      size: 24,
+                      circleColor: CircleColor(
+                          start: Color(0xff83C17F), end: Color(0xff83C17F)),
+                      bubblesColor: BubblesColor(
+                        dotPrimaryColor: Color(0xff83C17F),
+                        dotSecondaryColor: Color(0xff83C17F),
+                      ),
+                      likeBuilder: (bool isLiked) {
+                        return Icon(
+                          Icons.favorite,
+                          color: isLiked ? Color(0xff246E46) : Colors.white,
+                          size: 24,
+                        );
+                      },
+                    ),
+                  ),*/
                 ),
                 Positioned(
                   bottom: 16,
                   right: 16,
                   left: 16,
                   child: Text(
-                    title,
+                    widget.title,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
@@ -113,7 +168,7 @@ class Ads extends StatelessWidget {
               padding: EdgeInsets.only(left: 16, top: 12, right: 16)
                   .copyWith(bottom: 0),
               child: Text(
-                'Цена: ${cost} руб. в месяц',
+                'Цена: ${widget.cost} руб. в месяц',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
             ),
@@ -121,7 +176,7 @@ class Ads extends StatelessWidget {
               padding: EdgeInsets.only(left: 16, top: 8, right: 16)
                   .copyWith(bottom: 0),
               child: Text(
-                description,
+                widget.description,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(fontSize: 16),
               ),
@@ -136,24 +191,24 @@ class Ads extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                         builder: (context) => AdsBase(
-                            title: title,
-                            cost: cost,
-                            image: image,
-                            description: description,
-                            contacts: contacts,
-                            author: author,
-                            pubDate: pubDate,
-                            address: address,
-                            square: square,
-                            fridge: fridge,
-                            router: router,
-                            microwave: microwave,
-                            oven: oven,
-                            washMachine: washMachine,
-                            tv: tv,
-                            conditioner: conditioner,
-                            floors: floors,
-                            floor: floor)),
+                            title: widget.title,
+                            cost: widget.cost,
+                            //image: image,
+                            description: widget.description,
+                            contacts: widget.contacts,
+                            author: widget.author,
+                            pubDate: widget.pubDate,
+                            address: widget.address,
+                            square: widget.square,
+                            fridge: widget.fridge,
+                            router: widget.router,
+                            microwave: widget.microwave,
+                            oven: widget.oven,
+                            washMachine: widget.washMachine,
+                            tv: widget.tv,
+                            conditioner: widget.conditioner,
+                            floors: widget.floors,
+                            floor: widget.floor)),
                   );
                 },
               ),

@@ -1,26 +1,36 @@
-import 'package:diploma/add_adv.dart';
-import 'package:diploma/pages/home.dart';
-import 'package:diploma/pred_protected/user.dart';
+import 'package:diploma/pages/UserPage.dart';
 import 'package:diploma/registration.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class PR extends StatelessWidget {
+import 'model/UserApi.dart';
+
+class PR extends StatelessWidget{
   String _email = "";
   String _password = "";
   final _sizeTextBlack = const TextStyle(fontSize: 20.0, color: Colors.black);
   final _sizeTextWhite = const TextStyle(fontSize: 20.0, color: Colors.white);
-  final formKey = GlobalKey<FormState>();
   final bool login;
+  final formKey = GlobalKey<FormState>();
   late BuildContext _context;
 
-  PR({Key? key, required this.login}) : super(key: key);
+  PR({Key? key, required this.login,}) : super(key: key);
+
+  Future<UserApi> createuser () async{
+    final prefs = await SharedPreferences.getInstance();
+    final id = prefs.getInt('id');
+    final email = prefs.getString('email');
+    final username = prefs.getString('username');
+    return UserApi(email: email!, id: id!, username: username!);
+  }
+
 
   @override
   Widget build(BuildContext context) {
     _context = context;
-    return  login ? UserPr() : Scaffold(
+    return  login ? UserPage(createuser: createuser) :  Scaffold(
         body: Center(
           child: Form(
               key: formKey,
