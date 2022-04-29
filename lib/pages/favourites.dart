@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:diploma/model/Favorites.dart';
+import 'package:diploma/model/Image.dart';
 import 'package:diploma/ui/ads_cards.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,7 +19,7 @@ class FV extends StatefulWidget {
 class _FVState extends State<FV> {
   Favorites? favorites;
   Advertisement? advertisements;
-  List<Result> res = [];
+  Images? images;
   var isLoaded = false;
 
 
@@ -43,8 +44,8 @@ class _FVState extends State<FV> {
       }
     }*/
     //log(res.toString());
-    //image = await RemoteService().getImage();
-    if (advertisements != null/* && image != null*/) {
+    images = await RemoteService().getImages();
+    if (advertisements != null && images != null) {
       setState(() {
         isLoaded = true;
       });
@@ -58,10 +59,10 @@ class _FVState extends State<FV> {
         visible: isLoaded,
         child: ListView.builder(
           //reverse: true,
-          itemCount: advertisements?.count,
+          itemCount: advertisements?.results.length,
           itemBuilder: (context, index) {
             return Ads(
-              //image: image![index].image,
+              image: images!.results[advertisements!.results[index].id - 1].image,
               id: advertisements!.results[index].id,
               title: advertisements!.results[index].title,
               cost: advertisements!.results[index].cost.toString(),
@@ -82,6 +83,7 @@ class _FVState extends State<FV> {
               router: advertisements!.results[index].router,
               floor: advertisements!.results[index].floor,
               floors: advertisements!.results[index].floors,
+              isFavorite: true,
             );
           },
         ),

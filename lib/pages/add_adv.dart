@@ -1,4 +1,8 @@
-import 'package:diploma/pages/finish_add.dart';
+import 'dart:developer';
+
+import 'package:diploma/model/Advertisement.dart';
+import 'package:diploma/pages/Camera.dart';
+import 'package:diploma/pages/add_photo.dart';
 import 'package:diploma/services/remote_services.dart';
 import 'package:diploma/ui/checkBox_filters.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,7 +14,7 @@ class Add_adv extends StatefulWidget {
   @override
   _Add_advState createState() => _Add_advState();
 }
-
+late Advertisement advertisement;
 final TextEditingController _controllertitle = TextEditingController();
 final TextEditingController _controlleraddress = TextEditingController();
 final TextEditingController _controllercost = TextEditingController();
@@ -170,24 +174,6 @@ class _Add_advState extends State<Add_adv> {
                     fillColor: Color(0xff83C17F),
                     filled: true)),
           ),
-          /*const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Text(
-              'Автор',
-              style: TextStyle(color: Color(0xff246E46), fontSize: 20),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 16.0, left: 16),
-            child: TextField(
-                cursorColor: Colors.black,
-                controller: _controllerauthor,
-                decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    hintText: "Введите автора 1",
-                    fillColor: Color(0xff83C17F),
-                    filled: true)),
-          ),*/
           const Padding(
             padding: EdgeInsets.all(16.0),
             child: Text(
@@ -377,14 +363,17 @@ class _Add_advState extends State<Add_adv> {
               onTap: () async {
                 final prefs = await SharedPreferences.getInstance();
                 final int? id = prefs.getInt('id');
-                RemoteService().createAdvertisement(_controllertitle.text, _controlleraddress.text, int.parse(_controllercost.text),
+                await RemoteService().createAdvertisement(_controllertitle.text, _controlleraddress.text, int.parse(_controllercost.text),
                     _controllerdescription.text, _controllercontact.text, id!,
                     int.parse(_controllersquare.text), int.parse(_controllerfloor.text), int.parse(typeValue), int.parse(_controllerfloors.text),
                     int.parse(heatingValue), checklist[0], checklist[1], checklist[2], checklist[3], checklist[4], checklist[5], checklist[6]);
-                //RemoteService().createAdvertisement();
+                advertisement = await RemoteService().getAdvertisement();
+                int i = advertisement.results.length;
+                await prefs.setInt('nowidadv', advertisement.results[i-1].id);
+                log(prefs.getInt('nowidadv').toString(), name: 'проверка id только что созданного объявления');
               Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => FinishAdd()),
+              MaterialPageRoute(builder: (context) => AddPhoto()),
               );
               },
             ),

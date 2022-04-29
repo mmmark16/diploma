@@ -1,20 +1,24 @@
+import 'dart:developer';
+import 'package:diploma/model/Profile.dart';
+import 'package:diploma/pages/ErrorLoginPage.dart';
 import 'package:diploma/pages/UserPage.dart';
 import 'package:diploma/registration.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:diploma/services/remote_services.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'main.dart';
+import 'model/Token.dart';
 import 'model/UserApi.dart';
 
 class PR extends StatelessWidget{
-  String _email = "";
-  String _password = "";
+  final TextEditingController _controllerusername = TextEditingController();
+  final TextEditingController _controllerpassword = TextEditingController();
   final _sizeTextBlack = const TextStyle(fontSize: 20.0, color: Colors.black);
   final _sizeTextWhite = const TextStyle(fontSize: 20.0, color: Colors.white);
   final bool login;
   final formKey = GlobalKey<FormState>();
   late BuildContext _context;
+  late Profile profile;
 
   PR({Key? key, required this.login,}) : super(key: key);
 
@@ -39,24 +43,19 @@ class PR extends StatelessWidget{
                 children: <Widget>[
                   Container(
                     child: TextFormField(
-                      decoration: InputDecoration(labelText: "Email"),
-                      keyboardType: TextInputType.emailAddress,
+                      controller: _controllerusername,
+                      decoration: InputDecoration(labelText: "Username"),
                       maxLines: 1,
                       style: _sizeTextBlack,
-                      onSaved: (val) => _email = val!,
-                      validator: (val) =>
-                          !val!.contains("@") ? 'Not a valid email.' : null,
                     ),
                     width: 350.0,
                   ),
                   Container(
                     child: TextFormField(
+                      controller: _controllerpassword,
                       decoration: InputDecoration(labelText: "Пароль"),
                       obscureText: true,
                       maxLines: 1,
-                      validator: (val) =>
-                          val!.length < 6 ? 'Password too short, min 6 symbols  ' : null,
-                      onSaved: (val) => _password = val!,
                       style: _sizeTextBlack,
                     ),
                     width: 350.0,
@@ -74,7 +73,39 @@ class PR extends StatelessWidget{
                       child: MaterialButton(
                         height: 50.0,
                         minWidth: 150.0,
-                        onPressed: (){},
+                        onPressed: () async {
+                          final prefs = await SharedPreferences.getInstance();
+                          final refresh = prefs.getString('refresh');
+                          Token token = await RemoteService().getToken(_controllerusername.text, _controllerpassword.text);
+                          log(token.access.toString(), name: 'проверка аксес токена');
+                          log(token.refresh.toString(), name: 'проверка refresh токена');
+
+                          if (token.refresh.length < 2){
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ErrorLoginPages()),
+                            );
+                          } else {
+                            profile = await RemoteService().getProfile(_controllerusername.text);
+                            int id = profile.results[0].id;
+                            String email = profile.results[0].email;
+                            String username = profile.results[0].username;
+                            log(id.toString(), name: 'iduser');
+                            log(email, name: 'emailuser');
+                            log(username, name: 'username');
+                            await prefs.setInt('id', id);
+                            await prefs.setString('email', email);
+                            await prefs.setString('username', username);
+                            await prefs.setBool('login', true);
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => MyHomePage(login: true, BottomNavIndex: 3)),
+                                  (Route<dynamic> route) => false,
+                            );
+                          }
+                        },
                         child: Text(
                           "ВОЙТИ",
                           style: _sizeTextWhite,

@@ -1,12 +1,14 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:diploma/model/Code.dart';
+import 'package:diploma/model/Photo.dart';
+import 'package:diploma/model/Profile.dart';
 import 'package:diploma/model/Time.dart';
 import 'package:diploma/model/Advertisement.dart';
-import 'package:diploma/model/Advertisement.dart';
-import 'package:diploma/pages/UserPage.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 
 import '../model/Duration.dart';
 import '../model/Favorites.dart';
@@ -26,6 +28,8 @@ class RemoteService {
     }
     throw Exception('Ошибка получения данных');
   }
+
+
 
   Future<Advertisement> getAdvertisementforloginuser(int id) async {
     var client = http.Client();
@@ -95,11 +99,24 @@ class RemoteService {
   Future<Advertisement> getAdvertisementforID(int id) async {
     var client = http.Client();
     var uri = Uri.parse(
-        'https://estate-alarm.herokuapp.com/api/announcement/?TV=&address=&conditioner=&cost__gt=&cost__lt=&floor=&floor__gt=&floor__lt=&format=json&fridge=&heating=&id=${id}&microwave=&oven=&router=&square__gt=&square__lt=&type=&washMachine=');
+        'https://estate-alarm.herokuapp.com/api/image/?announcement__id=${id}');
     var responce = await client.get(uri);
     if (responce.statusCode == 200) {
       //var json = jsonDecode(utf8.decode(responce.bodyBytes));
       return advertisementFromJson(utf8.decode(responce.bodyBytes));
+    }
+    throw Exception('Ошибка получения данных');
+  }
+
+
+  Future<Images> getImageforID(int id) async {
+    var client = http.Client();
+    var uri = Uri.parse(
+        'https://estate-alarm.herokuapp.com/api/announcement/?TV=&address=&conditioner=&cost__gt=&cost__lt=&floor=&floor__gt=&floor__lt=&format=json&fridge=&heating=&id=${id}&microwave=&oven=&router=&square__gt=&square__lt=&type=&washMachine=');
+    var responce = await client.get(uri);
+    if (responce.statusCode == 200) {
+      //var json = jsonDecode(utf8.decode(responce.bodyBytes));
+      return imagesFromJson(utf8.decode(responce.bodyBytes));
     }
     throw Exception('Ошибка получения данных');
   }
@@ -118,14 +135,39 @@ class RemoteService {
     throw Exception('Ошибка получения данных');
   }
 
-  Future<List<Images>?> getImage() async {
+  Future<Images> getImages() async {
     var client = http.Client();
-    var uri =
-        Uri.parse('https://estate-alarm.herokuapp.com/api/image/?format=json');
+    var uri = Uri.parse(
+        'https://estate-alarm.herokuapp.com/api/image/?format=json');
     var responce = await client.get(uri);
     if (responce.statusCode == 200) {
       //var json = jsonDecode(utf8.decode(responce.bodyBytes));
       return imagesFromJson(utf8.decode(responce.bodyBytes));
+    }
+    throw Exception('Ошибка получения данных');
+  }
+
+  createImage(
+      int announcement,
+      String image,
+) async {
+    final response = await http.post(
+      Uri.parse(
+          'https://estate-alarm.herokuapp.com/api/image/?image=${image}&announcement=${announcement}'),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'image': image,
+        'announcement': announcement,
+
+      }),
+    );
+    print(response.statusCode);
+    log('${utf8.decode(response.bodyBytes)}', name: '${response.statusCode}');
+    if (response.statusCode == 201) {
+    } else {
+      throw Exception('Failed to create Images.');
     }
   }
 
@@ -206,6 +248,21 @@ class RemoteService {
     }
   }
 
+  Future<String> sendPhoto(File file) async {
+    var request = MultipartRequest('POST', Uri.parse('https://api.imgbb.com/1/upload?key=b57d1dbc7a6c50899f660355beb22069'));
+    var _headers = {'Content-Type': 'application/json'};
+    request.files.add(await MultipartFile.fromPath('image', file.path));
+    request.headers.addAll(_headers);
+    var resp = await request.send();
+    if (resp.statusCode == 200) {
+      Photo json = photoFromJson(utf8.decode((await (resp.stream.bytesToString())).codeUnits));
+      log(json.data.url, name: 'проверка полей загруженной картинки');
+      return json.data.url;
+
+    }
+    throw Exception('Ошибка получения данных');
+  }
+
 
   Future<Favorites> getFavoritedfromfull(int adv, int id) async {
     var client = http.Client();
@@ -270,6 +327,23 @@ class RemoteService {
     }
   }
 
+  Future<Profile> getProfile(String username) async {
+    final response = await http.get(
+      Uri.parse(
+          'https://estate-alarm.herokuapp.com/api/user/?username=${username}'),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+      },
+    );
+    print(response.statusCode);
+    log('${utf8.decode(response.bodyBytes)}', name: '${response.statusCode}');
+    if (response.statusCode == 200) {
+      return Profile.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to get Profile.');
+    }
+  }
+
   Future<Token> getToken(
       String username, String password) async {
     final response = await http.post(
@@ -288,7 +362,7 @@ class RemoteService {
     if (response.statusCode == 200) {
       return Token.fromJson(jsonDecode(response.body));
     } else {
-      throw Exception('Failed to get Token.');
+      return Token(refresh: '0', access: '0');
     }
   }
 

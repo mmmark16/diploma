@@ -7,7 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'pages/clock.dart';
 
 import 'pages/home.dart';
-import 'pages/messenger.dart';
+import 'messenger/messenger.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,8 +17,9 @@ void main() async {
   final access = prefs.getString('access') ?? "";
   final address = prefs.getString('address') ?? "";
   final id = prefs.getInt('id');
-  final email = prefs.getString('email');
-  final username = prefs.getString('username');
+  final idadv = prefs.getInt('nowidadv');
+  final email = prefs.getString('email') ?? "";
+  final username = prefs.getString('username') ?? "";
   runApp(MyApp(login: login,));
 }
 

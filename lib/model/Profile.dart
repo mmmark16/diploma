@@ -1,15 +1,11 @@
-// To parse this JSON data, do
-//
-//     final images = imagesFromJson(jsonString);
-
 import 'dart:convert';
 
-Images imagesFromJson(String str) => Images.fromJson(json.decode(str));
+Profile profileFromJson(String str) => Profile.fromJson(json.decode(str));
 
-String imagesToJson(Images data) => json.encode(data.toJson());
+String profileToJson(Profile data) => json.encode(data.toJson());
 
-class Images {
-  Images({
+class Profile {
+  Profile({
     required this.count,
     this.next,
     this.previous,
@@ -21,7 +17,7 @@ class Images {
   dynamic previous;
   List<Result> results;
 
-  factory Images.fromJson(Map<String, dynamic> json) => Images(
+  factory Profile.fromJson(Map<String, dynamic> json) => Profile(
     count: json["count"],
     next: json["next"],
     previous: json["previous"],
@@ -39,23 +35,23 @@ class Images {
 class Result {
   Result({
     required this.id,
-    required this.image,
-    required this.announcement,
+    required this.email,
+    required this.username,
   });
 
   int id;
-  String image;
-  int announcement;
+  String email;
+  String username;
 
   factory Result.fromJson(Map<String, dynamic> json) => Result(
     id: json["id"],
-    image: json["image"],
-    announcement: json["announcement"],
+    email: json["email"],
+    username: json["username"],
   );
 
   Map<String, dynamic> toJson() => {
     "id": id,
-    "image": image,
-    "announcement": announcement,
+    "email": email,
+    "username": username,
   };
 }

@@ -1,12 +1,10 @@
 import 'dart:developer';
-
 import 'package:diploma/model/Advertisement.dart';
 import 'package:diploma/pages/Search.dart';
 import 'package:diploma/ui/ads_cards.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import '../model/Code.dart';
 import '../model/Image.dart';
 import '../model/Time.dart';
 import '../services/remote_services.dart';
@@ -22,8 +20,10 @@ class _Home extends State<Home> {
   Advertisement? advertisements;
   Advertisement? advertisementsfav;
   Advertisement? advertisementsnotfav;
-  //List<Images>? image;
+  Images? images;
   late Map <int, String> imagesToAdv;
+  List<String> lol = [];
+
 
   var isLoaded = false;
   var login = false;
@@ -38,9 +38,10 @@ class _Home extends State<Home> {
 
   getLog() async {
     final prefs = await SharedPreferences.getInstance();
-    final email = prefs.getString('email');
+    final email = prefs.getString('email') ?? '';
     log(email.toString(), name: 'proverkaemail');
-    if (email!.isEmpty) {
+    log(email.length.toString(), name: 'проверка длинны');
+    if (email.length > 0) {
       setState(() {
         login = true;
       });
@@ -49,33 +50,84 @@ class _Home extends State<Home> {
 
   getData() async {
     final prefs = await SharedPreferences.getInstance();
-    final email = prefs.getString('email');
-    if(email!.isNotEmpty){
-      log(login.toString(), name:'ghtghtght');
+    final email = prefs.getString('email') ?? '';
+
+    if(email.length>0){
+      log(login.toString(), name:'проверка логина');
       final prefs = await SharedPreferences.getInstance();
       final iduser = prefs.getInt('id');
+
+
       advertisementsfav = await RemoteService().getAdvertisementforloginuser(iduser!);
+      for (int i = 0; i < advertisementsfav!.results.length; i++) {
+        advertisementsfav!.results[i].isFavorite = true;
+      }
+
 
       advertisementsnotfav = await RemoteService().getAdvertisementforloginuser2(iduser);
-      for(int i = 0; i < advertisementsnotfav!.count; i++){
-        advertisementsfav!.results.add(advertisementsnotfav!.results[i]);
+
+
+      for(int j = 0; j < advertisementsnotfav!.results.length; j++){
+        advertisementsfav!.results.add(advertisementsnotfav!.results[j]);
       }
-      //advertisementsfav!.results.addAll(advertisementsnotfav!.results);
+
       advertisements = advertisementsfav;
-    } else {
+
+      final address = prefs.getString('address') ?? '';
+      log(address.toString(), name: 'проверка адреса пользователя');
+      log(address.length.toString(), name: 'проверка длины адреса');
+      if(address.length > 0){
+        Code code1 = Code();
+        Code code2 = Code();
+        late Time time1;
+        log('проверка', name: 'проверка заходит ли в if');
+        for(int p = 0; p < advertisements!.results.length; p++){
+          code1 = await RemoteService().getCode(advertisements!.results[p].address);
+          code2 = await RemoteService().getCode(address);
+          time1 = await RemoteService().getTime(
+              code1.suggestions![0].data!.geoLat.toString(),
+              code1.suggestions![0].data!.geoLon.toString(),
+              code2.suggestions![0].data!.geoLat.toString(),
+              code2.suggestions![0].data!.geoLon.toString());
+
+          advertisements!.results[p].time = time1.rows[0].elements[0].duration.value;
+          log(advertisements!.results[p].title.toString(), name: 'проверка названия объявления');
+          log(advertisements!.results[p].time.toString(), name: 'проверка времени объявления');
+        }
+        advertisements!.results.sort((a, b) => a.time.compareTo(b.time));
+      }
+
+    }
+    else {
       advertisements = await RemoteService().getAdvertisement();
     }
 
-    //image = await RemoteService().getImage();
-    if (advertisements != null/* && image != null*/) {
+    images = await RemoteService().getImages();
+    bool flag = false;
+    for(int i = 0; i < advertisements!.results.length; i++){
+      for(int j = 0; j < images!.results.length; j++){
+        if(images!.results[j].announcement == advertisements!.results[i].id){
+            lol.add(images!.results[j].image);
+            flag = true;
+        }
+      }
+      if (!flag){
+        lol.add('https://i.ibb.co/Cm2k2xH/error.png');
+      } else{
+        flag = false;
+      }
+    }
+    if (advertisements != null && images != null) {
       setState(() {
         isLoaded = true;
       });
     }
-
   }
 
-
+  Future<String> getString(int id) async {
+    images = await RemoteService().getImageforID(id);
+    return images!.results[0].image;
+  }
 
   Icon actionIcon = const Icon(Icons.search, color: Color(0xff246E46));
 
@@ -101,9 +153,10 @@ class _Home extends State<Home> {
         child: ListView.builder(
           itemCount: advertisements?.results.length,
           itemBuilder: (context, index) {
+            log(index.toString(), name: 'проверка индекса');
             return Ads(
-              //image: image![index].image,
               id: advertisements!.results[index].id,
+              image: lol[index],
               title: advertisements!.results[index].title,
               cost: advertisements!.results[index].cost.toString(),
               description: advertisements!.results[index].description,
@@ -123,6 +176,7 @@ class _Home extends State<Home> {
               router: advertisements!.results[index].router,
               floor: advertisements!.results[index].floor,
               floors: advertisements!.results[index].floors,
+              isFavorite: advertisements!.results[index].isFavorite,
             );
           },
         ),

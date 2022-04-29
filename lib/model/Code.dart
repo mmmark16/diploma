@@ -69,7 +69,7 @@ class Data {
   String? cityType;
   String? cityTypeFull;
   String? city;
-  Null? cityArea;
+  String? cityArea;
   Null? cityDistrictFiasId;
   Null? cityDistrictKladrId;
   String? cityDistrictWithType;

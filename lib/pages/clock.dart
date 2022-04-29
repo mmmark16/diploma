@@ -15,27 +15,42 @@ class Clock extends StatefulWidget {
 }
 
 class _ClockState extends State<Clock> {
+
+  final TextEditingController home = TextEditingController();
+  final TextEditingController work = TextEditingController();
+  final TextEditingController meettime = TextEditingController();
+  final TextEditingController arrivaltime = TextEditingController();
+  final TextEditingController hourController = TextEditingController();
+  final TextEditingController minuteController = TextEditingController();
+  late bool visibil = false;
+  late String  addresuser = '';
+
+
+  @override
+  void initState() {
+    super.initState();
+    getvis();
+  }
+
+  getvis() async {
+    final prefs = await SharedPreferences.getInstance();
+    final address = await prefs.getString('address');
+    log(address.toString(), name: 'адрес пользователя');
+    log(address!.length.toString(), name: 'адрес пользователя длина');
+    if(address.isNotEmpty){
+      setState(() {
+        visibil = true;
+        addresuser = address;
+      });
+    } else {
+      setState(() {
+        visibil = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final TextEditingController home = TextEditingController();
-    final TextEditingController work = TextEditingController();
-    final TextEditingController meettime = TextEditingController();
-    final TextEditingController arrivaltime = TextEditingController();
-    final TextEditingController hourController = TextEditingController();
-    final TextEditingController minuteController = TextEditingController();
-
-    Future<bool> getvis() async {
-      final prefs = await SharedPreferences.getInstance();
-      final address = await prefs.getString('address');
-      if(address!.isNotEmpty){
-        return true;
-      } else {
-        return false;
-      }
-    }
-
-
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -74,9 +89,15 @@ class _ClockState extends State<Clock> {
             ),
           ),
           Visibility(
-            visible: true, //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            visible: visibil,
             child: Padding(
               padding: const EdgeInsets.only(right: 16.0, left: 16),
+              child: Text(
+                '${addresuser}', style: TextStyle(fontSize: 16),
+              )
+            ),
+            replacement: Padding(
+              padding: const EdgeInsets.only(left: 16.0, right: 16),
               child: TextField(
                   controller: work,
                   cursorColor: Colors.black,
@@ -84,7 +105,7 @@ class _ClockState extends State<Clock> {
                       border: InputBorder.none,
                       hintText: "Введите место работы/учебы",
                       fillColor: Color(0xff83C17F),
-                      filled: false)),
+                      filled: true)),
             ),
           ),
           const Padding(
@@ -185,7 +206,13 @@ class _ClockState extends State<Clock> {
               ),
               onTap: () async {
                 Code code1 = await RemoteService().getCode(home.text);
-                Code code2 = await RemoteService().getCode(work.text);
+                Code code2 = Code();
+                if (addresuser.isNotEmpty){
+                  code2 = await RemoteService().getCode(addresuser);
+                } else {
+                  code2 = await RemoteService().getCode(work.text);
+                }
+                log(code2.suggestions![0].data!.geoLat.toString(), name: 'проверка кординат адреса');
                 Time time1 = await RemoteService().getTime(
                   code1.suggestions![0].data!.geoLat.toString(),
                   code1.suggestions![0].data!.geoLon.toString(),
@@ -198,10 +225,10 @@ class _ClockState extends State<Clock> {
                 int clockhour = (fullseconds/3600).toInt();
                 int clockmin = ((fullseconds%3600)/60).toInt();
 
-                Navigator.push(
+                /*Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => SuperClock(hour: clockhour, min: clockmin)),
-                );
+                );*/
               },
             ),
           )

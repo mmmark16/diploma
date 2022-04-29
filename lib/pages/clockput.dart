@@ -90,9 +90,6 @@ class _SuperClockState extends State<SuperClock> {
                   int minutes;
                   hour = int.parse(hourController.text);
                   minutes = int.parse(minuteController.text);
-
-                  // creating alarm after converting hour
-                  // and minute into integer
                   FlutterAlarmClock.createAlarm(hour, minutes);
                 },
               ),
@@ -105,52 +102,10 @@ class _SuperClockState extends State<SuperClock> {
                     style: TextStyle(color: Color(0xff83C17F), fontSize: 20),
                 ),
                 onPressed: () {
-
-                  // show alarm
                   FlutterAlarmClock.showAlarms();
                 },
               ),
             ),
-
-            /*Container(
-              margin: const EdgeInsets.all(25),
-              child: TextButton(
-                  child: const Text(
-                    'Create timer',
-                    style: TextStyle(fontSize: 20.0),
-                  ),
-                  onPressed: () {
-                    int minutes;
-                    minutes = int.parse(minuteController.text);
-
-                    // create timer
-                    FlutterAlarmClock.createTimer(minutes);
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AboutDialog(
-                            children: [
-                              Center(
-                                child: Text("Timer is set",
-                                    style: TextStyle(
-                                        fontSize: 20, fontWeight: FontWeight.bold)),
-                              )
-                            ],
-                          );
-                        });
-                  }),
-            ),
-            ElevatedButton(
-              onPressed: () {
-
-                // show timers
-                FlutterAlarmClock.showTimers();
-              },
-              child: Text(
-                "Show Timers",
-                style: TextStyle(fontSize: 17),
-              ),
-            )*/
           ])),
     );
   }

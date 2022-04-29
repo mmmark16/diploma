@@ -1,16 +1,14 @@
 import 'dart:developer';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:diploma/model/Favorites.dart';
 import 'package:diploma/ui/ads_base.dart';
 import 'package:flutter/material.dart';
-import 'package:like_button/like_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../services/remote_services.dart';
 
 class Ads extends StatefulWidget {
-  //final String image;
+  final String image;
   final int id;
   final String title;
   final String cost;
@@ -31,10 +29,11 @@ class Ads extends StatefulWidget {
   final bool tv;
   final int floor;
   final int floors;
+  late bool isFavorite;
 
 
-  const Ads({
-    //required this.image,
+   Ads({
+    required this.image,
     required this.title,
     required this.cost,
     required this.description,
@@ -55,6 +54,7 @@ class Ads extends StatefulWidget {
     required this.type,
     required this.heating,
     required this.id,
+     required this.isFavorite,
   });
 
   @override
@@ -88,39 +88,36 @@ class _AdsState extends State<Ads> {
           children: [
             Stack(
               children: [
-                /*CachedNetworkImage(
-                  imageUrl: loadimage(image),
+                CachedNetworkImage(
+                  imageUrl: widget.image,
                   placeholder: (context, url) =>
                       Center(child: CircularProgressIndicator()),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
-                ),*/
-                Image.network(
-                    'https://avatars.mds.yandex.net/i?id=2a00000179f1bcbe3a8059d66b1f3dfa4616-4078287-images-thumbs&n=13'),
+                  errorWidget: (context, url, error) => Image.asset('assets/error.png'),
+                ),
                 Positioned(
                     right: 8,
                     top: 8,
                     child: GestureDetector(
                       onTap: () async {
-                        if(isLiked){
+                        if(widget.isFavorite){
                           final prefs = await SharedPreferences.getInstance();
                           final int? iduser = prefs.getInt('id');
                           Favorites fav = await RemoteService().getFavoritedfromfull(widget.id, iduser!);
-                          log(fav.results[0].id.toString(), name: 'idfavoritlog');
+                          log(fav.results[0].id.toString(), name: 'id избранного');
                           RemoteService().deleteFavorited(fav.results[0].id);
                         }else{
                           final prefs = await SharedPreferences.getInstance();
                           final int? iduser = prefs.getInt('id');
                           RemoteService().createFavorited(iduser!, widget.id);
                         }
-
                         setState(() {
-                          isLiked = !isLiked;
+                          widget.isFavorite = !widget.isFavorite;
                         });
                       },
                       child: Icon(
                         Icons.favorite,
                         size: 24,
-                        color: isLiked ? Color(0xff246E46) : Colors.white,
+                        color: widget.isFavorite ? Color(0xff246E46) : Colors.white,
                       ),
                     ),
                     /*child: GestureDetector(
@@ -193,7 +190,7 @@ class _AdsState extends State<Ads> {
                         builder: (context) => AdsBase(
                             title: widget.title,
                             cost: widget.cost,
-                            //image: image,
+                            image: widget.image,
                             description: widget.description,
                             contacts: widget.contacts,
                             author: widget.author,

@@ -111,7 +111,7 @@ class REG extends StatelessWidget {
                 await  prefs.setInt('id', _user.id);
                 await  prefs.setString('email', _emailcontroller.text);
                 await  prefs.setString('username', _usernamecontroller.text);
-                final bool? login = prefs.getBool('login');
+                bool? login = await prefs.getBool('login');
                 log(login.toString(), name: 'proverkaloga');
                 final String? email = prefs.getString('email');
                 final String? username = prefs.getString('username');

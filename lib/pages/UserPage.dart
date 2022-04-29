@@ -5,16 +5,17 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'add_adv.dart';
 import '../model/UserApi.dart';
-import '../services/remote_services.dart';
+
 
 
 class UserPage extends StatefulWidget {
   final Function createuser;
-  const UserPage({Key? key, required this.createuser, }) : super(key: key);
+  const UserPage({Key? key, required this.createuser}) : super(key: key);
 
   @override
   _UserPageState createState() => _UserPageState();
 }
+
 
 final TextEditingController _controlleraddress = TextEditingController();
 
@@ -27,7 +28,7 @@ class _UserPageState extends State<UserPage> {
       body: FutureBuilder<UserApi>(
         future: widget.createuser(),
         builder: (context, snapshot){
-          log(snapshot.data.toString());
+          log(snapshot.data.toString(), name: 'проверка snapshot');
           if (snapshot.hasData) {
             return GestureDetector(
               onTap: (){
@@ -146,12 +147,52 @@ class _UserPageState extends State<UserPage> {
                       onTap: () async {
                         final prefs = await SharedPreferences.getInstance();
                         final String? access = prefs.getString('access');
-                        log(access.toString());
+                        log(access.toString(), name: 'проверка лога аксес');
                         Navigator.push(
                             context, MaterialPageRoute(builder: (_) => Add_adv()));
                       },
                     ),
                   ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 32.0, right: 32, top: 16),
+                    child: GestureDetector(
+                      child: Container(
+                        height: 42,
+                        child: const Center(
+                            child: Text(
+                              'Выйти',
+                              style: TextStyle(color: Color(0xff246E46), fontSize: 24),
+                            )),
+                        decoration: const BoxDecoration(
+                          color: Color(0xff83C17F),
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.green,
+                              blurRadius: 7,
+                              offset: Offset(2, 5),
+                            ),
+                          ],
+                        ),
+                      ),
+                      onTap: () async {
+                        final prefs = await SharedPreferences.getInstance();
+                        final login = await prefs.setBool('login', false);
+                        final refresh = await prefs.remove('refresh');
+                        final access = await prefs.remove('access');
+                        final address = await prefs.remove('address');
+                        final id = await prefs.remove('id');
+                        final email = await prefs.remove('email');
+                        final username = await prefs.remove('username');
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MyApp(login: false,)),
+                              (Route<dynamic> route) => false,
+                        );
+                      },
+                    ),
+                  )
                 ],
               ),
             );

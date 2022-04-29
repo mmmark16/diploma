@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:like_button/like_button.dart';
 
 class AdsBase extends StatelessWidget {
-  //final String image;
+  final String image;
   final String title;
   final String cost;
   final String description;
@@ -24,7 +24,7 @@ class AdsBase extends StatelessWidget {
   final int floors;
 
   const AdsBase(
-      {//required this.image,
+      {required this.image,
       required this.title,
       required this.cost,
       required this.description,
@@ -99,7 +99,12 @@ class AdsBase extends StatelessWidget {
                 placeholder: (context, url) =>
                     Center(child: CircularProgressIndicator()),
                 errorWidget: (context, url, error) => Icon(Icons.error),
-              )*/Image.network('https://avatars.mds.yandex.net/i?id=2a00000179f1bcbe3a8059d66b1f3dfa4616-4078287-images-thumbs&n=13'),
+              )*/CachedNetworkImage(
+                imageUrl: image,
+                placeholder: (context, url) =>
+                    Center(child: CircularProgressIndicator()),
+                errorWidget: (context, url, error) => Image.asset('assets/error.png'),
+              ),
             ),
           ),
           Padding(
