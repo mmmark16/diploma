@@ -1,3 +1,4 @@
+/*
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_chat_example/data.dart';
 import 'package:firebase_chat_example/model/message.dart';
@@ -54,3 +55,4 @@ class FirebaseApi {
     }
   }
 }
+*/

@@ -120,31 +120,7 @@ class _AdsState extends State<Ads> {
                         color: widget.isFavorite ? Color(0xff246E46) : Colors.white,
                       ),
                     ),
-                    /*child: GestureDetector(
-                      onDoubleTap: () async {
-                        final prefs = await SharedPreferences.getInstance();
-                        final int? iduser = prefs.getInt('id');
-                        RemoteService().createFavorited(
-                            iduser!,
-                            id);
-                      },
-                      child: LikeButton(
-                      size: 24,
-                      circleColor: CircleColor(
-                          start: Color(0xff83C17F), end: Color(0xff83C17F)),
-                      bubblesColor: BubblesColor(
-                        dotPrimaryColor: Color(0xff83C17F),
-                        dotSecondaryColor: Color(0xff83C17F),
-                      ),
-                      likeBuilder: (bool isLiked) {
-                        return Icon(
-                          Icons.favorite,
-                          color: isLiked ? Color(0xff246E46) : Colors.white,
-                          size: 24,
-                        );
-                      },
-                    ),
-                  ),*/
+
                 ),
                 Positioned(
                   bottom: 16,

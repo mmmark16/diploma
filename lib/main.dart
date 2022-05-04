@@ -1,6 +1,7 @@
 import 'package:diploma/model/UserApi.dart';
 import 'package:diploma/pages/favourites.dart';
 import 'package:diploma/login.dart';
+import 'package:diploma/pages/mes.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,6 +14,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
   final login = prefs.getBool('login') ?? false;
+  final newadv = prefs.getBool('newadv') ?? false;
   final refresh = prefs.getString('refresh') ?? "";
   final access = prefs.getString('access') ?? "";
   final address = prefs.getString('address') ?? "";

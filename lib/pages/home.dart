@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:diploma/main.dart';
 import 'package:diploma/model/Advertisement.dart';
 import 'package:diploma/pages/Search.dart';
 import 'package:diploma/ui/ads_cards.dart';
@@ -24,18 +25,27 @@ class _Home extends State<Home> {
   late Map <int, String> imagesToAdv;
   List<String> lol = [];
 
-
+  late bool newadv;
   var isLoaded = false;
   var login = false;
+  late bool wew;
+
 
   @override
   void initState() {
     super.initState();
+    getnew();
     getLog();
     getData();
   }
 
-
+  getnew() async {
+    final prefs = await SharedPreferences.getInstance();
+    newadv = (await prefs.getBool('newadv') ?? false);
+    setState(() {
+      wew = newadv;
+    });
+  }
   getLog() async {
     final prefs = await SharedPreferences.getInstance();
     final email = prefs.getString('email') ?? '';
@@ -95,12 +105,18 @@ class _Home extends State<Home> {
           log(advertisements!.results[p].time.toString(), name: 'проверка времени объявления');
         }
         advertisements!.results.sort((a, b) => a.time.compareTo(b.time));
+
       }
 
     }
     else {
       advertisements = await RemoteService().getAdvertisement();
     }
+    log(wew.toString(), name: 'проверка новое сверху');
+    if(wew){
+      advertisements!.results = advertisements!.results.reversed.toList();
+    }
+
 
     images = await RemoteService().getImages();
     bool flag = false;
@@ -130,11 +146,25 @@ class _Home extends State<Home> {
   }
 
   Icon actionIcon = const Icon(Icons.search, color: Color(0xff246E46));
+  Icon leadingIcon = const Icon(Icons.trending_down, color: Color(0xff246E46));
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(icon: leadingIcon,onPressed:() async {
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setBool('newadv', !newadv);
+          setState(() {
+            newadv = !newadv;
+          });
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (context) => MyHomePage(login: login, BottomNavIndex: 0)),
+                (Route<dynamic> route) => false,
+          );
+        } ,),
         title: const Text(
           "ГЛАВНАЯ",
           style: TextStyle(color: Color(0xff246E46)),

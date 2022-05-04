@@ -1,4 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:diploma/model/UserApi.dart';
+import 'package:diploma/pages/chat.dart';
+import 'package:diploma/services/remote_services.dart';
 import 'package:diploma/ui/conveniences.dart';
 import 'package:flutter/material.dart';
 import 'package:like_button/like_button.dart';
@@ -211,7 +214,16 @@ class AdsBase extends StatelessWidget {
               ),
             ),
           ),
-          TextButton(onPressed: (){}, child: Text('Связаться с владельцем')),
+          TextButton(onPressed: () async {
+            UserApi usert = await RemoteService().getUserApiforID(author);
+            String user = usert.username;
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => Chat(
+                      title: user)),
+            );
+          }, child: Text('Связаться с владельцем')),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Text('Объявление создано: ${pubDate.toString().substring(0, 19)}'),

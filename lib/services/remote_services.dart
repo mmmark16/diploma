@@ -108,6 +108,41 @@ class RemoteService {
     throw Exception('Ошибка получения данных');
   }
 
+  Future<UserApi> getUserApiforID(int id) async {
+    var client = http.Client();
+    var uri = Uri.parse(
+        'https://estate-alarm.herokuapp.com/api/user/?id=${id}&username=');
+    var responce = await client.get(uri);
+    if (responce.statusCode == 200) {
+      //var json = jsonDecode(utf8.decode(responce.bodyBytes));
+      return (jsonDecode(responce.body));
+    }
+    throw Exception('Ошибка получения данных');
+  }
+
+  Future<UserApi> createUserApi(
+      String email, String username, String password) async {
+    final response = await http.post(
+      Uri.parse(
+          'https://estate-alarm.herokuapp.com/auth/users/?format=json'),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        "email": email,
+        "username": username,
+        "password": password
+      }),
+    );
+    print(response.statusCode);
+    log('${utf8.decode(response.bodyBytes)}', name: '${response.statusCode}');
+    if (response.statusCode == 201) {
+      return UserApi.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to create User.');
+    }
+  }
+
 
   Future<Images> getImageforID(int id) async {
     var client = http.Client();
@@ -304,28 +339,7 @@ class RemoteService {
     throw Exception('Ошибка получения данных');
   }
 
-  Future<UserApi> createUserApi(
-      String email, String username, String password) async {
-    final response = await http.post(
-      Uri.parse(
-          'https://estate-alarm.herokuapp.com/auth/users/?format=json'),
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode({
-        "email": email,
-        "username": username,
-        "password": password
-      }),
-    );
-    print(response.statusCode);
-    log('${utf8.decode(response.bodyBytes)}', name: '${response.statusCode}');
-    if (response.statusCode == 201) {
-      return UserApi.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception('Failed to create User.');
-    }
-  }
+
 
   Future<Profile> getProfile(String username) async {
     final response = await http.get(
