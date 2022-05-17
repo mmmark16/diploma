@@ -9,8 +9,6 @@ import 'package:diploma/model/Time.dart';
 import 'package:diploma/model/Advertisement.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
-
-import '../model/Duration.dart';
 import '../model/Favorites.dart';
 import '../model/Image.dart';
 import '../model/Token.dart';
@@ -23,7 +21,6 @@ class RemoteService {
         'https://estate-alarm.herokuapp.com/api/announcement/?format=json');
     var responce = await client.get(uri);
     if (responce.statusCode == 200) {
-      //var json = jsonDecode(utf8.decode(responce.bodyBytes));
       return advertisementFromJson(utf8.decode(responce.bodyBytes));
     }
     throw Exception('Ошибка получения данных');
@@ -36,8 +33,8 @@ class RemoteService {
     var uri = Uri.parse(
         'https://estate-alarm.herokuapp.com/api/announcement/?format=json&user_id_liked=${id}');
     var responce = await client.get(uri);
+    log(responce.statusCode.toString(), name: "проверка кода ошибки при получении данных зарегестрированного пользователя");
     if (responce.statusCode == 200) {
-      //var json = jsonDecode(utf8.decode(responce.bodyBytes));
       return advertisementFromJson(utf8.decode(responce.bodyBytes));
     }
     throw Exception('Ошибка получения данных');
@@ -48,8 +45,8 @@ class RemoteService {
     var uri = Uri.parse(
         'https://estate-alarm.herokuapp.com/api/announcement/?format=json&exclude_user_id_liked=${id}');
     var responce = await client.get(uri);
+    log(responce.statusCode.toString(), name: "проверка кода ошибки при получении данных зарегестрированного пользователя не избранные");
     if (responce.statusCode == 200) {
-      //var json = jsonDecode(utf8.decode(responce.bodyBytes));
       return advertisementFromJson(utf8.decode(responce.bodyBytes));
     }
     throw Exception('Ошибка получения данных');
@@ -61,7 +58,7 @@ class RemoteService {
         'https://estate-alarm.herokuapp.com/api/announcement/?user_id_liked=${id}');
     var responce = await client.get(uri);
     if (responce.statusCode == 200) {
-      //var json = jsonDecode(utf8.decode(responce.bodyBytes));
+
       return advertisementFromJson(utf8.decode(responce.bodyBytes));
     }
     throw Exception('Ошибка получения данных');
@@ -102,23 +99,11 @@ class RemoteService {
         'https://estate-alarm.herokuapp.com/api/image/?announcement__id=${id}');
     var responce = await client.get(uri);
     if (responce.statusCode == 200) {
-      //var json = jsonDecode(utf8.decode(responce.bodyBytes));
       return advertisementFromJson(utf8.decode(responce.bodyBytes));
     }
     throw Exception('Ошибка получения данных');
   }
 
-  Future<UserApi> getUserApiforID(int id) async {
-    var client = http.Client();
-    var uri = Uri.parse(
-        'https://estate-alarm.herokuapp.com/api/user/?id=${id}&username=');
-    var responce = await client.get(uri);
-    if (responce.statusCode == 200) {
-      //var json = jsonDecode(utf8.decode(responce.bodyBytes));
-      return (jsonDecode(responce.body));
-    }
-    throw Exception('Ошибка получения данных');
-  }
 
   Future<UserApi> createUserApi(
       String email, String username, String password) async {
@@ -150,7 +135,6 @@ class RemoteService {
         'https://estate-alarm.herokuapp.com/api/announcement/?TV=&address=&conditioner=&cost__gt=&cost__lt=&floor=&floor__gt=&floor__lt=&format=json&fridge=&heating=&id=${id}&microwave=&oven=&router=&square__gt=&square__lt=&type=&washMachine=');
     var responce = await client.get(uri);
     if (responce.statusCode == 200) {
-      //var json = jsonDecode(utf8.decode(responce.bodyBytes));
       return imagesFromJson(utf8.decode(responce.bodyBytes));
     }
     throw Exception('Ошибка получения данных');
@@ -161,7 +145,7 @@ class RemoteService {
   Future<Time> getTime(String start1, String end1, String start2, String end2) async {
     var client = http.Client();
     var uri = Uri.parse(
-        'https://api.distancematrix.ai/maps/api/distancematrix/json?origins=${start1},%20${end1}&destinations=${start2},%20${end2}&key=UoiTYKusvleOcRQJBNg2NSIr8YhFY');
+        'https://api.distancematrix.ai/maps/api/distancematrix/json?origins=${start1},%20${end1}&destinations=${start2},%20${end2}&key=tJt3JgfL53iqmitEKzSpb9hWPMQUF');
     var responce = await client.get(uri);
     if (responce.statusCode == 200) {
       return timeFromJson(utf8.decode(responce.bodyBytes));
@@ -176,12 +160,10 @@ class RemoteService {
         'https://estate-alarm.herokuapp.com/api/image/?format=json');
     var responce = await client.get(uri);
     if (responce.statusCode == 200) {
-      //var json = jsonDecode(utf8.decode(responce.bodyBytes));
       return imagesFromJson(utf8.decode(responce.bodyBytes));
     }
     throw Exception('Ошибка получения данных');
   }
-
   createImage(
       int announcement,
       String image,
@@ -358,6 +340,23 @@ class RemoteService {
     }
   }
 
+  Future<Profile> getProfileById(int id) async {
+    final response = await http.get(
+      Uri.parse(
+          'https://estate-alarm.herokuapp.com/api/user/?id=${id}&username='),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+      },
+    );
+    print(response.statusCode);
+    log('${utf8.decode(response.bodyBytes)}', name: '${response.statusCode}');
+    if (response.statusCode == 200) {
+      return Profile.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to get Profile.');
+    }
+  }
+
   Future<Token> getToken(
       String username, String password) async {
     final response = await http.post(
@@ -395,8 +394,6 @@ class RemoteService {
         "count": 1
       }),
     );
-    print(response.statusCode);
-    log('${utf8.decode(response.bodyBytes)}', name: '${response.statusCode}');
     if (response.statusCode == 200) {
       return Code.fromJson(jsonDecode(response.body));
     } else {

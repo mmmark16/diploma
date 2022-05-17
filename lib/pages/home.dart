@@ -9,6 +9,8 @@ import '../model/Code.dart';
 import '../model/Image.dart';
 import '../model/Time.dart';
 import '../services/remote_services.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -34,11 +36,17 @@ class _Home extends State<Home> {
   @override
   void initState() {
     super.initState();
+    initFireBase();
     getnew();
     getLog();
     getData();
   }
 
+  initFireBase() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp();
+    log("подключилось нормально к firebase");
+  }
   getnew() async {
     final prefs = await SharedPreferences.getInstance();
     newadv = (await prefs.getBool('newadv') ?? false);

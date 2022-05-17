@@ -260,6 +260,12 @@ class _Add_advState extends State<Add_adv> {
                     "Монолитный",
                   ),
                 ),
+                DropdownMenuItem<String>(
+                  value: "4",
+                  child: Text(
+                    "Деревянный",
+                  ),
+                ),
               ],
               onChanged: (value) {
                 setState(() {

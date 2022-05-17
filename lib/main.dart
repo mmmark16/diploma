@@ -1,4 +1,4 @@
-import 'package:diploma/model/UserApi.dart';
+import 'package:diploma/messenger/views/chatRoom.dart';
 import 'package:diploma/pages/favourites.dart';
 import 'package:diploma/login.dart';
 import 'package:diploma/pages/mes.dart';
@@ -8,7 +8,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'pages/clock.dart';
 
 import 'pages/home.dart';
-import 'messenger/messenger.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -100,7 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         body: FV(),
       ),
-      MS(),
+      ChatRoom(),
       Scaffold(
         appBar: AppBar(
           title: const Text(

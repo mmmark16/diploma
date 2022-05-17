@@ -1,4 +1,8 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:diploma/model/Profile.dart';
 import 'package:diploma/model/UserApi.dart';
 import 'package:diploma/pages/chat.dart';
 import 'package:diploma/services/remote_services.dart';
@@ -6,7 +10,11 @@ import 'package:diploma/ui/conveniences.dart';
 import 'package:flutter/material.dart';
 import 'package:like_button/like_button.dart';
 
-class AdsBase extends StatelessWidget {
+import '../messenger/helper/constans.dart';
+import '../messenger/servisec/database.dart';
+import '../messenger/views/conversation.dart';
+
+class AdsBase extends StatefulWidget {
   final String image;
   final String title;
   final String cost;
@@ -44,11 +52,65 @@ class AdsBase extends StatelessWidget {
       required this.router,
       required this.tv, required this.floor, required this.floors});
 
+  @override
+  State<AdsBase> createState() => _AdsBaseState();
+}
+
+class _AdsBaseState extends State<AdsBase> {
   String check(bool filters) {
     if (filters == true) {
       return 'есть';
     } else {
       return 'отсутствует';
+    }
+  }
+
+  DatabaseMethods databaseMethods = DatabaseMethods();
+
+  TextEditingController searchEditingController = TextEditingController();
+
+  QuerySnapshot? searchSnapshot;
+
+  bool isLoading = false;
+
+  bool haveUserSearched = false;
+
+  getChatRoomId(String a, String b) {
+    if (a.substring(0, 1).codeUnitAt(0) > b.substring(0, 1).codeUnitAt(0)) {
+      return "$b\_$a";
+    } else {
+      return "$a\_$b";
+    }
+  }
+
+  createChatRoomAndStartConversation(String userName)async{
+    if(userName != Constants.myName){
+      setState(() {
+        isLoading = true;
+      });
+      String chatroomId = getChatRoomId(Constants.myName,userName);
+      List<String> users = [Constants.myName,userName];
+      Map<String, dynamic>chatRoomMap = {
+        'users': users,
+        'chatroomID': chatroomId
+      };
+      await databaseMethods.createChatRoom(chatRoomMap,chatroomId);
+      Navigator.push(this.context, MaterialPageRoute(
+          builder: (context) => Conversation(chatroomId:chatroomId,userName: userName,)));
+    }else{
+      print('you can not send message');
+      showDialog<String>(
+          context: this.context,
+          builder: (BuildContext context) => AlertDialog(
+              title: Text('Ошибка'),
+              content: Text('Вы не можете начать чат с собой'),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {Navigator.pop(context, 'OK');},
+                  child: const Text('OK'),
+                ),]
+
+          ));
     }
   }
 
@@ -66,7 +128,7 @@ class AdsBase extends StatelessWidget {
               Navigator.pop(context);
             }),
         title: Text(
-          title,
+          widget.title,
           style: TextStyle(color: Color(0xff246E46)),
         ),
         actions: <Widget>[
@@ -103,7 +165,7 @@ class AdsBase extends StatelessWidget {
                     Center(child: CircularProgressIndicator()),
                 errorWidget: (context, url, error) => Icon(Icons.error),
               )*/CachedNetworkImage(
-                imageUrl: image,
+                imageUrl: widget.image,
                 placeholder: (context, url) =>
                     Center(child: CircularProgressIndicator()),
                 errorWidget: (context, url, error) => Image.asset('assets/error.png'),
@@ -113,42 +175,42 @@ class AdsBase extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(left: 16.0, right: 16),
             child: Text(
-              'Цена: ${cost} рублей в месяц',
+              'Цена: ${widget.cost} рублей в месяц',
               style: TextStyle(fontSize: 24, color: Color(0xff246E46)),
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 16.0, top: 26),
             child: Text(
-              'Адрес: ${address}',
+              'Адрес: ${widget.address}',
               style: TextStyle(fontSize: 20, color: Color(0xff246E46)),
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 16.0, top: 26),
             child: Text(
-              'Описание: ${description}',
+              'Описание: ${widget.description}',
               style: TextStyle(fontSize: 20, color: Color(0xff246E46)),
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 16.0, top: 26),
             child: Text(
-              'Площадь: ${square.toString()} м2',
+              'Площадь: ${widget.square.toString()} м2',
               style: TextStyle(fontSize: 24, color: Color(0xff246E46)),
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 16.0, top: 26),
             child: Text(
-              'Этаж: ${floor}/${floors}',
+              'Этаж: ${widget.floor}/${widget.floors}',
               style: TextStyle(fontSize: 24, color: Color(0xff246E46)),
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 16.0, top: 26),
             child: Text(
-              'Связаться: ${contacts}',
+              'Связаться: ${widget.contacts}',
               style: TextStyle(fontSize: 20, color: Color(0xff246E46)),
             ),
           ),
@@ -176,37 +238,37 @@ class AdsBase extends StatelessWidget {
                   ),
                   Conveniences(
                     text: 'Холодильник',
-                    visible: fridge,
+                    visible: widget.fridge,
                     icon: Icons.ac_unit,
                   ),
                   Conveniences(
                     text: 'Микроволновка',
-                    visible: microwave,
+                    visible: widget.microwave,
                     icon: Icons.microwave,
                   ),
                   Conveniences(
                     text: 'Стиральная машина',
-                    visible: washMachine,
+                    visible: widget.washMachine,
                     icon: Icons.water_drop,
                   ),
                   Conveniences(
                     text: 'Печь',
-                    visible: oven,
+                    visible: widget.oven,
                     icon: Icons.bakery_dining,
                   ),
                   Conveniences(
                     text: 'Кондиционер',
-                    visible: conditioner,
+                    visible: widget.conditioner,
                     icon: Icons.air,
                   ),
                   Conveniences(
                     text: 'Роутер',
-                    visible: router,
+                    visible: widget.router,
                     icon: Icons.wifi,
                   ),
                   Conveniences(
                     text: 'Телевизор',
-                    visible: tv,
+                    visible: widget.tv,
                     icon: Icons.tv,
                   ),
 
@@ -215,18 +277,21 @@ class AdsBase extends StatelessWidget {
             ),
           ),
           TextButton(onPressed: () async {
-            UserApi usert = await RemoteService().getUserApiforID(author);
-            String user = usert.username;
+            Profile profileid = await RemoteService().getProfileById(widget.author);
+            String user = profileid.results[0].username;
+            log(user, name: "вот этот пользователь создал объявление");
+            createChatRoomAndStartConversation(user);
             Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => Chat(
                       title: user)),
             );
+
           }, child: Text('Связаться с владельцем')),
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Text('Объявление создано: ${pubDate.toString().substring(0, 19)}'),
+            child: Text('Объявление создано: ${widget.pubDate.toString().substring(0, 19)}'),
           )
         ],
       ),

@@ -79,7 +79,6 @@ class PR extends StatelessWidget{
                           Token token = await RemoteService().getToken(_controllerusername.text, _controllerpassword.text);
                           log(token.access.toString(), name: 'проверка аксес токена');
                           log(token.refresh.toString(), name: 'проверка refresh токена');
-
                           if (token.refresh.length < 2){
                             Navigator.push(
                               context,

@@ -219,16 +219,16 @@ class _ClockState extends State<Clock> {
                   code2.suggestions![0].data!.geoLat.toString(),
                   code2.suggestions![0].data!.geoLon.toString(),
                 );
-                log(time1.rows[0].elements[0].duration.value.toString());
+                log(time1.rows[0].elements[0].duration.value.toString(), name: "проверка че за тема со временем");
                 double fullseconds = (double.parse(hourController.text)*3600 + double.parse(minuteController.text)*60);
                 fullseconds = fullseconds - time1.rows[0].elements[0].duration.value - double.parse(meettime.text)*60;
                 int clockhour = (fullseconds/3600).toInt();
                 int clockmin = ((fullseconds%3600)/60).toInt();
 
-                /*Navigator.push(
+                Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => SuperClock(hour: clockhour, min: clockmin)),
-                );*/
+                );
               },
             ),
           )

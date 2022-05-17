@@ -21,6 +21,7 @@ class _FVState extends State<FV> {
   Advertisement? advertisements;
   Images? images;
   var isLoaded = false;
+  List<String> lol = [];
 
 
 
@@ -33,18 +34,22 @@ class _FVState extends State<FV> {
   getData() async {
     final prefs = await SharedPreferences.getInstance();
     int? id = prefs.getInt('id');
-    //favorites = await RemoteService().getFavorited(id!);
-    //log(favorites!.results[0].announcement.toString());
     advertisements = await RemoteService().getFavoritAdvertisement(id!);
-    /*for(int i = 0; i< favorites!.count; i++){
-      for (int j =0; j<advertisements!.count; j++){
-        if (favorites!.results[i].announcement == advertisements!.results[j].id){
-          res.add(advertisements!.results[j]);
+    images = await RemoteService().getImages();
+    bool flag = false;
+    for(int i = 0; i < advertisements!.results.length; i++){
+      for(int j = 0; j < images!.results.length; j++){
+        if(images!.results[j].announcement == advertisements!.results[i].id){
+          lol.add(images!.results[j].image);
+          flag = true;
         }
       }
-    }*/
-    //log(res.toString());
-    images = await RemoteService().getImages();
+      if (!flag){
+        lol.add('https://i.ibb.co/Cm2k2xH/error.png');
+      } else{
+        flag = false;
+      }
+    }
     if (advertisements != null && images != null) {
       setState(() {
         isLoaded = true;
@@ -62,7 +67,7 @@ class _FVState extends State<FV> {
           itemCount: advertisements?.results.length,
           itemBuilder: (context, index) {
             return Ads(
-              image: images!.results[advertisements!.results[index].id - 1].image,
+              image: lol[index],
               id: advertisements!.results[index].id,
               title: advertisements!.results[index].title,
               cost: advertisements!.results[index].cost.toString(),
