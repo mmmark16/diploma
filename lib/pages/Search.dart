@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:diploma/pages/ResualtPage.dart';
 import 'package:diploma/services/remote_services.dart';
+import 'package:diploma/ui/DropBox.dart';
 import 'package:diploma/ui/checkBox_filters.dart';
 import 'package:flutter/material.dart';
 import '../model/Advertisement.dart';
@@ -10,7 +13,6 @@ class Search extends StatefulWidget {
   @override
   State<Search> createState() => _SearchState();
 }
-
 
 final TextEditingController _controllermincost = TextEditingController();
 final TextEditingController _controllermaxcost = TextEditingController();
@@ -40,20 +42,31 @@ const List<IconData> iconlist = [
   Icons.tv
 ];
 
-String typeValue = '1';
-String heatingValue = '1';
+String typeValue = '';
+String heatingValue = '';
+String fridgeValue = '';
+String microwaveValue = '';
+String washMachineValue = '';
+String ovenValue = '';
+String conditionerValue = '';
+String routerValue = '';
+String TVValue = '';
 
 bool isChecked = false;
+
+
 
 class _SearchState extends State<Search> {
   late Advertisement advertisements;
 
-  List<bool> checklist = [false, false, false, false, false, false, false];
+  List<String> checklist = ["", "", "", "", "", "", ""];
 
-  setbool(int index) {
+  setbool(int index, String value) {
     return () {
       setState(() {
-        checklist[index] = !checklist[index];
+        checklist[index] = value;
+        for(int i = 0; i < 7; i++)
+        log(checklist[i]);
       });
     };
   }
@@ -241,6 +254,12 @@ class _SearchState extends State<Search> {
             child: DropdownButton<String>(
               items: const [
                 DropdownMenuItem<String>(
+                  value: "",
+                  child: Text(
+                    "Не имеет значения",
+                  ),
+                ),
+                DropdownMenuItem<String>(
                   value: "1",
                   child: Text(
                     "Панельный",
@@ -283,6 +302,12 @@ class _SearchState extends State<Search> {
             padding: EdgeInsets.only(right: 16.0, left: 16),
             child: DropdownButton<String>(
               items: const [
+                DropdownMenuItem<String>(
+                  value: "",
+                  child: Text(
+                    "Не имеет значения",
+                  ),
+                ),
                 DropdownMenuItem<String>(
                   value: "1",
                   child: Text(
@@ -328,26 +353,353 @@ class _SearchState extends State<Search> {
               style: TextStyle(color: Color(0xff246E46), fontSize: 20),
             ),
           ),
-          ListView.builder(
-            itemCount: 7,
-            physics: NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemBuilder: (context, index) =>
-                CheckBoxFilters(text: namelist[index],
-                  icon: iconlist[index],
-                  callback: setbool(index),),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(top: 24, left: 16, bottom: 16),
+                child: Text(
+                  "Холодильник",
+                  style: TextStyle(color: Color(0xff246E46), fontSize: 22, fontWeight: FontWeight.bold),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(right: 16.0, left: 16),
+                child: DropdownButton<String>(
+                  items: const [
+                    DropdownMenuItem<String>(
+                      value: "",
+                      child: Text(
+                        "Не имеет значения",
+                      ),
+                    ),
+                    DropdownMenuItem<String>(
+                      value: "true",
+                      child: Text(
+                        "Есть",
+                      ),
+                    ),
+                    DropdownMenuItem<String>(
+                      value: "false",
+                      child: Text(
+                        "Отсутствует",
+                      ),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      fridgeValue = value!;
+                    });
+                  },
+                  value: fridgeValue,
+                  elevation: 2,
+                  style: TextStyle(color: Color(0xff246E46), fontSize: 20),
+                  isDense: true,
+                  iconSize: 40.0,
+                  iconEnabledColor: Color(0xff246E46),
+                ),
+              ),
+            ],
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(top: 24, left: 16, bottom: 16),
+                child: Text(
+                  "Микроволновка",
+                  style: TextStyle(color: Color(0xff246E46), fontSize: 22, fontWeight: FontWeight.bold),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(right: 16.0, left: 16),
+                child: DropdownButton<String>(
+                  items: const [
+                    DropdownMenuItem<String>(
+                      value: "",
+                      child: Text(
+                        "Не имеет значения",
+                      ),
+                    ),
+                    DropdownMenuItem<String>(
+                      value: "true",
+                      child: Text(
+                        "Есть",
+                      ),
+                    ),
+                    DropdownMenuItem<String>(
+                      value: "false",
+                      child: Text(
+                        "Отсутствует",
+                      ),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      microwaveValue = value!;
+                    });
+                  },
+                  value: microwaveValue,
+                  elevation: 2,
+                  style: TextStyle(color: Color(0xff246E46), fontSize: 20),
+                  isDense: true,
+                  iconSize: 40.0,
+                  iconEnabledColor: Color(0xff246E46),
+                ),
+              ),
+            ],
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(top: 24, left: 16, bottom: 16),
+                child: Text(
+                  "Стиральная машина",
+                  style: TextStyle(color: Color(0xff246E46), fontSize: 22, fontWeight: FontWeight.bold),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(right: 16.0, left: 16),
+                child: DropdownButton<String>(
+                  items: const [
+                    DropdownMenuItem<String>(
+                      value: "",
+                      child: Text(
+                        "Не имеет значения",
+                      ),
+                    ),
+                    DropdownMenuItem<String>(
+                      value: "true",
+                      child: Text(
+                        "Есть",
+                      ),
+                    ),
+                    DropdownMenuItem<String>(
+                      value: "false",
+                      child: Text(
+                        "Отсутствует",
+                      ),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      washMachineValue = value!;
+                    });
+                  },
+                  value: washMachineValue,
+                  elevation: 2,
+                  style: TextStyle(color: Color(0xff246E46), fontSize: 20),
+                  isDense: true,
+                  iconSize: 40.0,
+                  iconEnabledColor: Color(0xff246E46),
+                ),
+              ),
+            ],
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(top: 24, left: 16, bottom: 16),
+                child: Text(
+                  "Печь",
+                  style: TextStyle(color: Color(0xff246E46), fontSize: 22, fontWeight: FontWeight.bold),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(right: 16.0, left: 16),
+                child: DropdownButton<String>(
+                  items: const [
+                    DropdownMenuItem<String>(
+                      value: "",
+                      child: Text(
+                        "Не имеет значения",
+                      ),
+                    ),
+                    DropdownMenuItem<String>(
+                      value: "true",
+                      child: Text(
+                        "Есть",
+                      ),
+                    ),
+                    DropdownMenuItem<String>(
+                      value: "false",
+                      child: Text(
+                        "Отсутствует",
+                      ),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      ovenValue = value!;
+                    });
+                  },
+                  value: ovenValue,
+                  elevation: 2,
+                  style: TextStyle(color: Color(0xff246E46), fontSize: 20),
+                  isDense: true,
+                  iconSize: 40.0,
+                  iconEnabledColor: Color(0xff246E46),
+                ),
+              ),
+            ],
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(top: 24, left: 16, bottom: 16),
+                child: Text(
+                  "Кондиционер",
+                  style: TextStyle(color: Color(0xff246E46), fontSize: 22, fontWeight: FontWeight.bold),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(right: 16.0, left: 16),
+                child: DropdownButton<String>(
+                  items: const [
+                    DropdownMenuItem<String>(
+                      value: "",
+                      child: Text(
+                        "Не имеет значения",
+                      ),
+                    ),
+                    DropdownMenuItem<String>(
+                      value: "true",
+                      child: Text(
+                        "Есть",
+                      ),
+                    ),
+                    DropdownMenuItem<String>(
+                      value: "false",
+                      child: Text(
+                        "Отсутствует",
+                      ),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      conditionerValue = value!;
+                    });
+                  },
+                  value: conditionerValue,
+                  elevation: 2,
+                  style: TextStyle(color: Color(0xff246E46), fontSize: 20),
+                  isDense: true,
+                  iconSize: 40.0,
+                  iconEnabledColor: Color(0xff246E46),
+                ),
+              ),
+            ],
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(top: 24, left: 16, bottom: 16),
+                child: Text(
+                  "Роутер",
+                  style: TextStyle(color: Color(0xff246E46), fontSize: 22, fontWeight: FontWeight.bold),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(right: 16.0, left: 16),
+                child: DropdownButton<String>(
+                  items: const [
+                    DropdownMenuItem<String>(
+                      value: "",
+                      child: Text(
+                        "Не имеет значения",
+                      ),
+                    ),
+                    DropdownMenuItem<String>(
+                      value: "true",
+                      child: Text(
+                        "Есть",
+                      ),
+                    ),
+                    DropdownMenuItem<String>(
+                      value: "false",
+                      child: Text(
+                        "Отсутствует",
+                      ),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      routerValue = value!;
+                    });
+                  },
+                  value: routerValue,
+                  elevation: 2,
+                  style: TextStyle(color: Color(0xff246E46), fontSize: 20),
+                  isDense: true,
+                  iconSize: 40.0,
+                  iconEnabledColor: Color(0xff246E46),
+                ),
+              ),
+            ],
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(top: 24, left: 16, bottom: 16),
+                child: Text(
+                  "ТВ",
+                  style: TextStyle(color: Color(0xff246E46), fontSize: 22, fontWeight: FontWeight.bold),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(right: 16.0, left: 16),
+                child: DropdownButton<String>(
+                  items: const [
+                    DropdownMenuItem<String>(
+                      value: "",
+                      child: Text(
+                        "Не имеет значения",
+                      ),
+                    ),
+                    DropdownMenuItem<String>(
+                      value: "true",
+                      child: Text(
+                        "Есть",
+                      ),
+                    ),
+                    DropdownMenuItem<String>(
+                      value: "false",
+                      child: Text(
+                        "Отсутствует",
+                      ),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      TVValue = value!;
+                    });
+                  },
+                  value: TVValue,
+                  elevation: 2,
+                  style: TextStyle(color: Color(0xff246E46), fontSize: 20),
+                  isDense: true,
+                  iconSize: 40.0,
+                  iconEnabledColor: Color(0xff246E46),
+                ),
+              ),
+            ],
           ),
           Padding(
             padding:
-            const EdgeInsets.only(top: 24, left: 16, right: 16, bottom: 16),
+                const EdgeInsets.only(top: 24, left: 16, right: 16, bottom: 16),
             child: GestureDetector(
               child: Container(
                 height: 42,
                 child: const Center(
                     child: Text(
-                      'Найти',
-                      style: TextStyle(color: Color(0xff246E46), fontSize: 24),
-                    )),
+                  'Найти',
+                  style: TextStyle(color: Color(0xff246E46), fontSize: 24),
+                )),
                 decoration: const BoxDecoration(
                   color: Color(0xff83C17F),
                   borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -362,32 +714,33 @@ class _SearchState extends State<Search> {
               ),
               onTap: () async {
                 advertisements = await RemoteService().searchAdvertisement(
-                    int.parse(_controllermincost.text),
-                    int.parse(_controllermaxcost.text),
+                    (_controllermincost.text),
+                    (_controllermaxcost.text),
                     _controlleraddress.text,
-                    int.parse(_controllerminsquare.text),
-                    int.parse(_controllermaxsquare.text),
-                    int.parse(_controllerminfloor.text),
-                    int.parse(_controllermaxfloor.text),
-                    int.parse(_controllerfloor.text),
-                    int.parse(typeValue),
-                    int.parse(heatingValue),
-                    checklist[0],
-                    checklist[1],
-                    checklist[2],
-                    checklist[3],
-                    checklist[4],
-                    checklist[5],
-                    checklist[6]);
+                    (_controllerminsquare.text),
+                    (_controllermaxsquare.text),
+                    (_controllerminfloor.text),
+                    (_controllermaxfloor.text),
+                    (_controllerfloor.text),
+                    (typeValue),
+                    (heatingValue),
+                    fridgeValue,
+                    microwaveValue,
+                    washMachineValue,
+                    ovenValue,
+                    conditionerValue,
+                    routerValue,
+                    TVValue);
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ResualtPage(adv: advertisements)),
+                  MaterialPageRoute(
+                      builder: (context) => ResualtPage(adv: advertisements)),
                 );
               },
             ),
           )
         ],
       ),
-    );;
+    );
   }
 }

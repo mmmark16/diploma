@@ -80,4 +80,3 @@ singup(String name, pas, login, age, token, filePath) async {
   request.send().then((value) => print(value));
 
 }
-

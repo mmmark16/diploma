@@ -17,8 +17,7 @@ class ResualtPage extends StatefulWidget {
 class _ResualtPageState extends State<ResualtPage> {
   Images? images;
   var isLoaded = false;
-
-
+  List<String> lol = [];
   @override
   void initState() {
     super.initState();
@@ -27,6 +26,20 @@ class _ResualtPageState extends State<ResualtPage> {
 
   getData() async {
     images = await RemoteService().getImages();
+    bool flag = false;
+    for(int i = 0; i < widget.adv.results.length; i++){
+      for(int j = 0; j < images!.results.length; j++){
+        if(images!.results[j].announcement == widget.adv.results[i].id){
+          lol.add(images!.results[j].image);
+          flag = true;
+        }
+      }
+      if (!flag){
+        lol.add('https://i.ibb.co/Cm2k2xH/error.png');
+      } else{
+        flag = false;
+      }
+    }
     if (images != null) {
       setState(() {
         isLoaded = true;
@@ -51,7 +64,7 @@ class _ResualtPageState extends State<ResualtPage> {
           itemCount: widget.adv.results.length,
           itemBuilder: (context, index) {
             return Ads(
-              image: images!.results[widget.adv.results[index].id - 1].image,
+              image: lol[index],
               id: widget.adv.results[index].id,
               title: widget.adv.results[index].title,
               cost: widget.adv.results[index].cost.toString(),

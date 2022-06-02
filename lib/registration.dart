@@ -215,6 +215,3 @@ class _REGState extends State<REG> {
     );
   }
 }
-
-
-

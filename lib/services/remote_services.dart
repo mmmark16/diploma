@@ -65,23 +65,23 @@ class RemoteService {
   }
 
   Future<Advertisement> searchAdvertisement(
-      int mincost,
-      int maxcost,
+      String mincost,
+      String maxcost,
       String address,
-      int minsquare,
-      int maxsquare,
-      int minfloor,
-      int maxfloor,
-      int floor,
-      int type,
-      int heating,
-      bool fridge,
-      bool microwave,
-      bool washMachine,
-      bool oven,
-      bool conditioner,
-      bool router,
-      bool TV) async {
+      String minsquare,
+      String maxsquare,
+      String minfloor,
+      String maxfloor,
+      String floor,
+      String type,
+      String heating,
+      String fridge,
+      String microwave,
+      String washMachine,
+      String oven,
+      String conditioner,
+      String router,
+      String TV) async {
     var client = http.Client();
     var uri = Uri.parse(
         'https://estate-alarm.herokuapp.com/api/announcement/?id=&cost__gt=${mincost}&cost__lt=${maxcost}&address=${address}&square__gt=${minsquare}&square__lt=${maxsquare}&floor__gt=${minfloor}&floor__lt=${maxfloor}&floor=${floor}&type=${type}&heating=${heating}&fridge=${fridge}&microwave=${microwave}&washMachine=${washMachine}&oven=${oven}&conditioner=${conditioner}&router=${router}&TV=${TV}');

@@ -154,25 +154,11 @@ class _Home extends State<Home> {
   }
 
   Icon actionIcon = const Icon(Icons.search, color: Color(0xff246E46));
-  Icon leadingIcon = const Icon(Icons.trending_down, color: Color(0xff246E46));
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(icon: leadingIcon,onPressed:() async {
-          final prefs = await SharedPreferences.getInstance();
-          await prefs.setBool('newadv', !newadv);
-          setState(() {
-            newadv = !newadv;
-          });
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-                builder: (context) => MyHomePage(login: login, BottomNavIndex: 0)),
-                (Route<dynamic> route) => false,
-          );
-        } ,),
         title: const Text(
           "ГЛАВНАЯ",
           style: TextStyle(color: Color(0xff246E46)),

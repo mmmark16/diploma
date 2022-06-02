@@ -73,6 +73,10 @@ class _ChatRoomState extends State<ChatRoom> {
     return isLoading
         ? const Loading()
         : Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text("ЧАТЫ", style: TextStyle(color: Color(0xff246E46)),),
+      ),
       key: _scaffoldKey,
       body: SafeArea(
         child: Stack(
@@ -80,14 +84,7 @@ class _ChatRoomState extends State<ChatRoom> {
             Container(
                 alignment: Alignment.topLeft,
                 margin: EdgeInsets.only(top: 50),
-                padding: const EdgeInsets.only(left: 30, top: 20),
-                child: const Text(
-                  'Чаты',
-                  style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: 2),
-                )),
+                padding: const EdgeInsets.only(left: 30, top: 20)),
             Container(
               child: chatRoomList(),
               margin: EdgeInsets.only(top: 100),
@@ -138,7 +135,7 @@ class _ChatRoomTileState extends State<ChatRoomTile> {
               height: 40,
               width: 40,
               decoration: BoxDecoration(
-                  color: Colors.amber, borderRadius: BorderRadius.circular(30)),
+                  color: Color(0xff83C17F), borderRadius: BorderRadius.circular(30)),
               child: Text(userName.substring(0, 1),
                   textAlign: TextAlign.center,
                   style: TextStyle(
